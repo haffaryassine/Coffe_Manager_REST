@@ -1,7 +1,6 @@
 USE [master]
 GO
-
-/****** Object:  Database [B_machinecafe]    Script Date: 06/09/2019 14:53:59 ******/
+/****** Object:  Database [B_machinecafe]    Script Date: 06/09/2019 15:01:31 ******/
 CREATE DATABASE [B_machinecafe]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -9,103 +8,136 @@ CREATE DATABASE [B_machinecafe]
  LOG ON 
 ( NAME = N'B_machinecafe_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\DATA\B_machinecafe_log.ldf' , SIZE = 1040KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
 GO
-
 ALTER DATABASE [B_machinecafe] SET COMPATIBILITY_LEVEL = 110
 GO
-
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 begin
 EXEC [B_machinecafe].[dbo].[sp_fulltext_database] @action = 'enable'
 end
 GO
-
 ALTER DATABASE [B_machinecafe] SET ANSI_NULL_DEFAULT OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET ANSI_NULLS OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET ANSI_PADDING OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET ANSI_WARNINGS OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET ARITHABORT OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET AUTO_CLOSE OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET AUTO_CREATE_STATISTICS ON 
 GO
-
 ALTER DATABASE [B_machinecafe] SET AUTO_SHRINK OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET AUTO_UPDATE_STATISTICS ON 
 GO
-
 ALTER DATABASE [B_machinecafe] SET CURSOR_CLOSE_ON_COMMIT OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET CURSOR_DEFAULT  GLOBAL 
 GO
-
 ALTER DATABASE [B_machinecafe] SET CONCAT_NULL_YIELDS_NULL OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET NUMERIC_ROUNDABORT OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET QUOTED_IDENTIFIER OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET RECURSIVE_TRIGGERS OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET  ENABLE_BROKER 
 GO
-
 ALTER DATABASE [B_machinecafe] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET DATE_CORRELATION_OPTIMIZATION OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET TRUSTWORTHY OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET ALLOW_SNAPSHOT_ISOLATION OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET PARAMETERIZATION SIMPLE 
 GO
-
 ALTER DATABASE [B_machinecafe] SET READ_COMMITTED_SNAPSHOT OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET HONOR_BROKER_PRIORITY OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET RECOVERY FULL 
 GO
-
 ALTER DATABASE [B_machinecafe] SET  MULTI_USER 
 GO
-
 ALTER DATABASE [B_machinecafe] SET PAGE_VERIFY CHECKSUM  
 GO
-
 ALTER DATABASE [B_machinecafe] SET DB_CHAINING OFF 
 GO
-
 ALTER DATABASE [B_machinecafe] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
 GO
-
 ALTER DATABASE [B_machinecafe] SET TARGET_RECOVERY_TIME = 0 SECONDS 
 GO
+EXEC sys.sp_db_vardecimal_storage_format N'B_machinecafe', N'ON'
+GO
+USE [B_machinecafe]
+GO
+/****** Object:  Table [dbo].[T_badge]    Script Date: 06/09/2019 15:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[T_badge](
+	[id_badge] [int] NOT NULL,
+ CONSTRAINT [PK__T_badge__7A106ED75BA2F0B0] PRIMARY KEY CLUSTERED 
+(
+	[id_badge] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
+GO
+/****** Object:  Table [dbo].[T_boisson]    Script Date: 06/09/2019 15:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[T_boisson](
+	[id_boisson] [int] IDENTITY(1,1) NOT NULL,
+	[libelle_b] [varchar](100) NOT NULL,
+	[Qte_sucre_recommandation] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_boisson] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[T_selection]    Script Date: 06/09/2019 15:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[T_selection](
+	[id_selection] [int] IDENTITY(1,1) NOT NULL,
+	[qte_sucre] [int] NULL,
+	[id_boisson] [int] NULL,
+	[id_badge] [int] NULL,
+	[mug] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_selection] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+ALTER TABLE [dbo].[T_selection]  WITH CHECK ADD  CONSTRAINT [FK__T_selecti__id_ba__173876EA] FOREIGN KEY([id_badge])
+REFERENCES [dbo].[T_badge] ([id_badge])
+GO
+ALTER TABLE [dbo].[T_selection] CHECK CONSTRAINT [FK__T_selecti__id_ba__173876EA]
+GO
+ALTER TABLE [dbo].[T_selection]  WITH CHECK ADD FOREIGN KEY([id_boisson])
+REFERENCES [dbo].[T_boisson] ([id_boisson])
+GO
+USE [master]
+GO
 ALTER DATABASE [B_machinecafe] SET  READ_WRITE 
 GO
-
