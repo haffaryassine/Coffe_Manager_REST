@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="B_machinecafeModelStoreContainer" CdmEntityContainer="B_machinecafeEntities">
+    <EntitySetMapping Name="T_boisson">
+      <EntityTypeMapping TypeName="B_machinecafeModel.T_boisson">
+        <MappingFragment StoreEntitySet="T_boisson">
+          <ScalarProperty Name="id_boisson" ColumnName="id_boisson" />
+          <ScalarProperty Name="libelle_b" ColumnName="libelle_b" />
+          <ScalarProperty Name="Qte_sucre_recommandation" ColumnName="Qte_sucre_recommandation" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="T_selection">
+      <EntityTypeMapping TypeName="B_machinecafeModel.T_selection">
+        <MappingFragment StoreEntitySet="T_selection">
+          <ScalarProperty Name="id_selection" ColumnName="id_selection" />
+          <ScalarProperty Name="qte_sucre" ColumnName="qte_sucre" />
+          <ScalarProperty Name="id_boisson" ColumnName="id_boisson" />
+          <ScalarProperty Name="id_badge" ColumnName="id_badge" />
+          <ScalarProperty Name="mug" ColumnName="mug" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="T_badge">
+      <EntityTypeMapping TypeName="B_machinecafeModel.T_badge">
+        <MappingFragment StoreEntitySet="T_badge">
+          <ScalarProperty Name="id_badge" ColumnName="id_badge" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

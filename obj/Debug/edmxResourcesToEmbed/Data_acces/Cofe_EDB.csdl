@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="B_machinecafeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="T_boisson">
+    <Key>
+      <PropertyRef Name="id_boisson" />
+    </Key>
+    <Property Name="id_boisson" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="libelle_b" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Qte_sucre_recommandation" Type="Int32" />
+    <NavigationProperty Name="T_selection" Relationship="Self.FK__T_selecti__id_bo__164452B1" FromRole="T_boisson" ToRole="T_selection" />
+  </EntityType>
+  <EntityType Name="T_selection">
+    <Key>
+      <PropertyRef Name="id_selection" />
+    </Key>
+    <Property Name="id_selection" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="qte_sucre" Type="Int32" />
+    <Property Name="id_boisson" Type="Int32" />
+    <Property Name="id_badge" Type="Int32" />
+    <Property Name="mug" Type="Boolean" />
+    <NavigationProperty Name="T_boisson" Relationship="Self.FK__T_selecti__id_bo__164452B1" FromRole="T_selection" ToRole="T_boisson" />
+    <NavigationProperty Name="T_badge" Relationship="B_machinecafeModel.FK__T_selecti__id_ba__173876EA" FromRole="T_selection" ToRole="T_badge" />
+  </EntityType>
+  <Association Name="FK__T_selecti__id_bo__164452B1">
+    <End Role="T_boisson" Type="Self.T_boisson" Multiplicity="0..1" />
+    <End Role="T_selection" Type="Self.T_selection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="T_boisson">
+        <PropertyRef Name="id_boisson" />
+      </Principal>
+      <Dependent Role="T_selection">
+        <PropertyRef Name="id_boisson" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="B_machinecafeEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="T_boisson" EntityType="Self.T_boisson" />
+    <EntitySet Name="T_selection" EntityType="Self.T_selection" />
+    <AssociationSet Name="FK__T_selecti__id_bo__164452B1" Association="Self.FK__T_selecti__id_bo__164452B1">
+      <End Role="T_boisson" EntitySet="T_boisson" />
+      <End Role="T_selection" EntitySet="T_selection" />
+    </AssociationSet>
+    <EntitySet Name="T_badge" EntityType="B_machinecafeModel.T_badge" />
+    <AssociationSet Name="FK__T_selecti__id_ba__173876EA" Association="B_machinecafeModel.FK__T_selecti__id_ba__173876EA">
+      <End Role="T_badge" EntitySet="T_badge" />
+      <End Role="T_selection" EntitySet="T_selection" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="T_badge">
+    <Key>
+      <PropertyRef Name="id_badge" />
+    </Key>
+    <Property Name="id_badge" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="T_selection" Relationship="B_machinecafeModel.FK__T_selecti__id_ba__173876EA" FromRole="T_badge" ToRole="T_selection" />
+  </EntityType>
+  <Association Name="FK__T_selecti__id_ba__173876EA">
+    <End Type="B_machinecafeModel.T_badge" Role="T_badge" Multiplicity="0..1" />
+    <End Type="B_machinecafeModel.T_selection" Role="T_selection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="T_badge">
+        <PropertyRef Name="id_badge" />
+      </Principal>
+      <Dependent Role="T_selection">
+        <PropertyRef Name="id_badge" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

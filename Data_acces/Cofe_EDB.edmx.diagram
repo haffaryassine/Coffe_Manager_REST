@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0abd4fb514d24b39aca16f3b8d1ae925" Name="Diagram1">
+        <EntityTypeShape EntityType="B_machinecafeModel.T_boisson" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="B_machinecafeModel.T_selection" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="B_machinecafeModel.FK__T_selecti__id_bo__164452B1" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="B_machinecafeModel.T_badge" Width="1.5" PointX="0.75" PointY="1.5" />
+        <AssociationConnector Association="B_machinecafeModel.FK__T_selecti__id_ba__173876EA" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
