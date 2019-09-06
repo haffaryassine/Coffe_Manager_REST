@@ -94,8 +94,8 @@ C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\bin\fr\System.Web.
 C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\bin\fr\System.Web.WebPages.resources.dll
 C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\bin\fr\System.Web.WebPages.Deployment.resources.dll
 C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\bin\fr\System.Web.WebPages.Razor.resources.dll
+C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\obj\Debug\Cofe_Manager_.csprojAssemblyReference.cache
 C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\obj\Debug\Cofe_Manager_.csproj.CoreCompileInputs.cache
 C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\obj\Debug\Cofe_Manager_.csproj.CopyComplete
 C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\obj\Debug\Cofe_Manager_.dll
 C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\obj\Debug\Cofe_Manager_.pdb
-C:\Users\haffar.EONE\source\repos\Cofe_Manager_\Cofe_Manager_\obj\Debug\Cofe_Manager_.csprojAssemblyReference.cache
