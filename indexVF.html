@@ -1,0 +1,3353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul Prix de Référence - Marchés Publics Maroc</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+    
+    <style>
+        :root {
+            --maroc-green: #006233;
+            --maroc-red: #C1272D;
+            --maroc-yellow: #F7DC6F;
+        }
+        
+        .bg-maroc-green {
+            background-color: var(--maroc-green) !important;
+        }
+        
+        .text-maroc-green {
+            color: var(--maroc-green) !important;
+        }
+        
+        .border-maroc-green {
+            border-color: var(--maroc-green) !important;
+        }
+        
+        .bg-maroc-red {
+            background-color: var(--maroc-red) !important;
+        }
+        
+        .text-maroc-red {
+            color: var(--maroc-red) !important;
+        }
+        
+        .btn-maroc-green {
+            background-color: var(--maroc-green);
+            color: white;
+            border: none;
+        }
+        
+        .btn-maroc-green:hover {
+            background-color: #004d26;
+            color: white;
+        }
+        
+        .badge-acceptee {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        
+        .badge-excessive {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-anormal {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .card-header {
+            font-weight: 600;
+        }
+        
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        .dark-mode .card {
+            background-color: #2d3748;
+            border-color: #4a5568;
+        }
+        
+        .dark-mode .table {
+            color: #ffffff;
+        }
+        
+        .dark-mode .table th {
+            background-color: #4a5568;
+            color: #ffffff;
+        }
+        
+        .dark-mode .table td {
+            border-color: #4a5568;
+        }
+        
+        .dark-mode .form-control,
+        .dark-mode .form-select {
+            background-color: #4a5568;
+            border-color: #718096;
+            color: #ffffff;
+        }
+        
+        .dark-mode .modal-content {
+            background-color: #2d3748;
+            color: #ffffff;
+        }
+        
+        .dark-mode .bg-light {
+            background-color: #4a5568 !important;
+        }
+        
+        .dark-mode .text-dark {
+            color: #ffffff !important;
+        }
+        
+        .stat-card {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .offer-row:hover {
+            background-color: rgba(0, 98, 51, 0.05);
+        }
+        
+        .dark-mode .offer-row:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .best-offer-badge {
+            background-color: var(--maroc-yellow);
+            color: #856404;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        .tooltip-inner {
+            max-width: 300px;
+        }
+        
+        .cursor-pointer {
+            cursor: pointer;
+        }
+        
+        .form-range::-webkit-slider-thumb {
+            background-color: var(--maroc-green);
+        }
+        
+        .form-range::-moz-range-thumb {
+            background-color: var(--maroc-green);
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow: auto;
+            max-height: 400px;
+        }
+        
+        .dark-mode pre {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        .history-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .history-card:hover {
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+        }
+        
+        .excel-export-btn {
+            background: linear-gradient(135deg, #217346, #185c37);
+            color: white;
+            border: none;
+        }
+        
+        .excel-export-btn:hover {
+            background: linear-gradient(135deg, #185c37, #0f4528);
+            color: white;
+        }
+        
+        .pdf-export-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+        }
+        
+        .pdf-export-btn:hover {
+            background: linear-gradient(135deg, #ee5a52, #d63031);
+            color: white;
+        }
+        
+        .dataTables_wrapper {
+            margin-top: 20px;
+        }
+        
+        .dataTables_length select {
+            margin: 0 5px;
+        }
+        
+        .export-buttons {
+            margin-top: 20px;
+        }
+        
+        .highlight {
+            background-color: rgba(0, 98, 51, 0.1) !important;
+        }
+        
+        .swal2-popup {
+            font-size: 1.1rem !important;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-maroc-green shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-calculator me-2"></i>
+                Calcul Prix de Référence :  (HAFFAR ABDELFETTAH)
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="input-group input-group-sm me-3" style="width: 200px;">
+                    <input type="text" id="calculationName" class="form-control form-control-sm" 
+                           placeholder="Nom du calcul" value="Nouveau calcul">
+                </div>
+                <button class="btn btn-sm btn-outline-light me-2" onclick="saveCurrentCalculation()">
+                    <i class="bi bi-save"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-light" onclick="toggleDarkMode()" title="Mode sombre/clair">
+                    <i id="darkModeIcon" class="bi bi-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Tabs Navigation -->
+    <div class="container-fluid bg-light">
+        <div class="container">
+            <ul class="nav nav-tabs" id="mainTabs">
+                <li class="nav-item">
+                    <button class="nav-link active" onclick="switchTab('calcul')">
+                        <i class="bi bi-calculator me-2"></i>Calcul
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="switchTab('parametres')">
+                        <i class="bi bi-gear me-2"></i>Paramètres
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="switchTab('historique')">
+                        <i class="bi bi-clock-history me-2"></i>Historique
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="switchTab('rapport')">
+                        <i class="bi bi-file-text me-2"></i>Rapport
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="switchTab('export')">
+                        <i class="bi bi-download me-2"></i>Export
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="container">
+            <!-- Tab 1: Calcul -->
+            <div id="calculTab" class="tab-content">
+                <div class="row">
+                    <!-- Left Column - Forms -->
+                    <div class="col-lg-4 mb-4">
+                        <!-- Market Data Card -->
+                        <div class="card mb-4 shadow">
+                            <div class="card-header bg-maroc-green text-white d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-building me-2"></i>Données du marché
+                                </div>
+                                <button class="btn btn-sm btn-outline-light" onclick="toggleAdvancedSettings()">
+                                    <i class="bi bi-sliders"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Type de marché</label>
+                                    <select id="marketType" class="form-select" onchange="updateThresholdDisplay()">
+                                        <option value="travaux">Travaux</option>
+                                        <option value="fournitures">Fournitures</option>
+                                        <option value="services">Services (hors études)</option>
+                                        <option value="etudes">Études</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Estimation (E) en DH</label>
+                                    <div class="input-group">
+                                        <input type="number" id="estimation" class="form-control" 
+                                               placeholder="Ex: 5000000" oninput="updateCalculation()">
+                                        <span class="input-group-text">DH</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" id="taxIncluded" class="form-check-input">
+                                    <label class="form-check-label" for="taxIncluded">Montants TTC</label>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" id="technicalScoring" class="form-check-input" 
+                                           onchange="toggleTechnicalScoring()">
+                                    <label class="form-check-label" for="technicalScoring">Notation technique + prix</label>
+                                </div>
+                                
+                                <div id="technicalWeightSection" class="mb-3" style="display: none;">
+                                    <label class="form-label">Poids technique: <span id="technicalWeightValue">60</span>%</label>
+                                    <input type="range" id="technicalWeight" class="form-range" min="0" max="100" 
+                                           value="60" oninput="document.getElementById('technicalWeightValue').textContent = this.value; updateCalculation()">
+                                </div>
+                                
+                                <!-- Advanced Settings -->
+                                <div id="advancedSettings" style="display: none;">
+                                    <hr>
+                                    <h6 class="mt-3 mb-3"><i class="bi bi-sliders me-2"></i>Seuils personnalisés</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label">Excessive (supérieur à)</label>
+                                        <div class="input-group">
+                                            <input type="number" id="excessiveThreshold" class="form-control" 
+                                                   min="1" max="50" step="0.1" value="20" onchange="updateCalculation()">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Anormalement basse (inférieur à)</label>
+                                        <div class="input-group">
+                                            <input type="number" id="abnormalThreshold" class="form-control" 
+                                                   min="1" max="50" step="0.1" value="20" onchange="updateCalculation()">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-secondary w-100" onclick="resetThresholds()">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>Réinitialiser les seuils
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Add Offer Card -->
+                        <div class="card shadow">
+                            <div class="card-header bg-maroc-green text-white">
+                                <i class="bi bi-plus-circle me-2"></i>Ajouter une offre
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <input type="text" id="newCompany" class="form-control" 
+                                           placeholder="Nom du concurrent">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <input type="number" id="newAmount" class="form-control" 
+                                               placeholder="Montant proposé">
+                                        <span class="input-group-text">DH</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3" id="newTechnicalScoreSection" style="display: none;">
+                                    <input type="number" id="newTechnicalScore" class="form-control" 
+                                           placeholder="Note technique (/100)" min="0" max="100">
+                                </div>
+                                <button class="btn btn-maroc-green w-100 mb-2" onclick="addOffer()">
+                                    <i class="bi bi-plus-circle me-2"></i>Ajouter l'offre
+                                </button>
+                                <div class="d-grid gap-2 d-md-flex">
+                                    <button class="btn btn-primary flex-fill" onclick="showImportModal()">
+                                        <i class="bi bi-upload me-2"></i>Importer
+                                    </button>
+                                    <button class="btn btn-purple flex-fill" onclick="exportCalculation()" 
+                                            id="exportBtn" disabled>
+                                        <i class="bi bi-download me-2"></i>Exporter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="card shadow mt-4">
+                            <div class="card-header bg-dark text-white">
+                                <i class="bi bi-lightning me-2"></i>Actions Rapides
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary" onclick="loadExample()">
+                                        <i class="bi bi-file-earmark-text me-2"></i>Charger un exemple
+                                    </button>
+                                    <button class="btn btn-outline-warning" onclick="resetAll()">
+                                        <i class="bi bi-trash me-2"></i>Tout réinitialiser
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column - Results -->
+                    <div class="col-lg-8">
+                        <!-- Offers Table -->
+                        <div id="offersTableSection" style="display: none;">
+                            <div class="card mb-4 shadow">
+                                <div class="card-header bg-maroc-green text-white d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-table me-2"></i>
+                                        Analyse des offres (<span id="offersCount">0</span>)
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-light me-2" onclick="toggleStatistics()">
+                                            <i class="bi bi-graph-up"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-light" onclick="exportTableToExcel()">
+                                            <i class="bi bi-file-earmark-excel"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Statistics -->
+                                    <div id="statisticsSection" style="display: none;" class="mb-4">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="stat-card bg-success bg-opacity-10">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                                        <span class="fw-bold text-success">Montant moyen</span>
+                                                    </div>
+                                                    <h4 id="averageAmount" class="fw-bold text-success">0 DH</h4>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="stat-card bg-primary bg-opacity-10">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <i class="bi bi-arrows-fullscreen text-primary me-2"></i>
+                                                        <span class="fw-bold text-primary">Plage des offres</span>
+                                                    </div>
+                                                    <h4 id="offerRange" class="fw-bold text-primary">0 - 0 DH</h4>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="stat-card bg-purple bg-opacity-10">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <i class="bi bi-graph-up text-purple me-2"></i>
+                                                        <span class="fw-bold text-purple">Écart moyen</span>
+                                                    </div>
+                                                    <h4 id="averageDiff" class="fw-bold text-purple">0%</h4>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="stat-card bg-warning bg-opacity-10">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <i class="bi bi-percent text-warning me-2"></i>
+                                                        <span class="fw-bold text-warning">Taux d'écartement</span>
+                                                    </div>
+                                                    <h4 id="exclusionRate" class="fw-bold text-warning">0%</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-striped" id="offersTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Concurrent</th>
+                                                    <th class="text-end">Montant (DH)</th>
+                                                    <th id="technicalScoreHeader" style="display: none;" class="text-center">Note Tech.</th>
+                                                    <th>Statut</th>
+                                                    <th>Écart %</th>
+                                                    <th class="text-center">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="offersTableBody">
+                                                <!-- Offers will be inserted here by JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Reference Price and Best Offer -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="card bg-gradient text-white shadow" style="background:blue">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="bi bi-check-circle me-2"></i>Prix de Référence (P)
+                                            </h5>
+                                            <div class="bg-white bg-opacity-10 p-3 rounded">
+                                                <h2 id="referencePrice" class="fw-bold mb-2">0 DH</h2>
+                                                <small id="referenceFormula" class="opacity-75"></small>
+                                                <div class="mt-2">
+                                                    <button class="btn btn-sm btn-light" onclick="showReferencePriceDetails()">
+                                                        <i class="bi bi-info-circle me-1"></i>Détails
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-gradient text-white shadow" style="background:orange;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="bi bi-trophy me-2"></i>Meilleure Offre
+                                            </h5>
+                                            <div class="bg-white bg-opacity-10 p-3 rounded">
+                                                <h4 id="bestOfferCompany" class="fw-bold mb-2">-</h4>
+                                                <h3 id="bestOfferAmount" class="fw-bold">0 DH</h3>
+                                                <small id="bestOfferDiff" class="opacity-75"></small>
+                                                <div class="mt-2">
+                                                    <button class="btn btn-sm btn-light" onclick="showBestOfferDetails()">
+                                                        <i class="bi bi-info-circle me-1"></i>Détails
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Thresholds Display -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header bg-dark text-white">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Seuils d'écartement (Article 44)
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="alert alert-danger">
+                                                <h6 class="alert-heading">
+                                                    <i class="bi bi-arrow-down-circle me-2"></i>
+                                                    Offre anormalement basse:
+                                                </h6>
+                                                <h4 id="abnormalThresholdDisplay" class="fw-bold">0 DH</h4>
+                                                <small>Inférieure à E - <span id="abnormalPercent">20</span>%</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="alert alert-warning">
+                                                <h6 class="alert-heading">
+                                                    <i class="bi bi-arrow-up-circle me-2"></i>
+                                                    Offre excessive:
+                                                </h6>
+                                                <h4 id="excessiveThresholdDisplay" class="fw-bold">0 DH</h4>
+                                                <small>Supérieure à E + <span id="excessivePercent">20</span>%</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div id="emptyState" class="text-center py-5">
+                            <i class="bi bi-calculator display-1 text-muted mb-4"></i>
+                            <h3 class="mb-3">Commencez votre analyse</h3>
+                            <p class="text-muted mb-4">
+                                Renseignez l'estimation du marché et ajoutez les offres reçues pour calculer automatiquement le prix de référence.
+                            </p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <button class="btn btn-primary" onclick="showImportModal()">
+                                    <i class="bi bi-upload me-2"></i>Importer des données
+                                </button>
+                                <button class="btn btn-secondary" onclick="loadExample()">
+                                    <i class="bi bi-file-earmark-text me-2"></i>Charger un exemple
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 2: Parameters -->
+            <div id="parametresTab" class="tab-content" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header bg-maroc-green text-white">
+                        <i class="bi bi-gear me-2"></i>Paramètres de l'application
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="mb-4">Seuils d'écartement par type de marché</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Type de marché</th>
+                                                <th>Excessive (supérieur à)</th>
+                                                <th>Anormalement basse (inférieur à)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <i class="bi bi-building me-2"></i>Travaux
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdTravauxExcessive" min="1" max="50" step="0.1" value="20" onchange="updateThreshold('travaux', 'excessive', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdTravauxAbnormal" min="1" max="50" step="0.1" value="20" onchange="updateThreshold('travaux', 'abnormal', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <i class="bi bi-box-seam me-2"></i>Fournitures
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdFournituresExcessive" min="1" max="50" step="0.1" value="20" onchange="updateThreshold('fournitures', 'excessive', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdFournituresAbnormal" min="1" max="50" step="0.1" value="25" onchange="updateThreshold('fournitures', 'abnormal', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <i class="bi bi-tools me-2"></i>Services
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdServicesExcessive" min="1" max="50" step="0.1" value="20" onchange="updateThreshold('services', 'excessive', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdServicesAbnormal" min="1" max="50" step="0.1" value="25" onchange="updateThreshold('services', 'abnormal', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <i class="bi bi-journal-text me-2"></i>Études
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdEtudesExcessive" min="1" max="50" step="0.1" value="20" onchange="updateThreshold('etudes', 'excessive', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" 
+                                                               id="thresholdEtudesAbnormal" min="1" max="50" step="0.1" value="25" onchange="updateThreshold('etudes', 'abnormal', this.value)">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="d-flex gap-2 mt-4">
+                                    <button class="btn btn-secondary" onclick="resetAllThresholds()">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>Réinitialiser aux valeurs par défaut
+                                    </button>
+                                    <button class="btn btn-primary" onclick="uniformizeThresholds()">
+                                        <i class="bi bi-equalizer me-2"></i>Uniformiser tous à 20%
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="mb-4">Actions</h5>
+                                <div class="d-grid gap-3">
+                                    <button class="btn btn-primary" onclick="exportCalculation()">
+                                        <i class="bi bi-download me-2"></i>Exporter le calcul actuel
+                                    </button>
+                                    <button class="btn btn-success" onclick="showImportModal()">
+                                        <i class="bi bi-upload me-2"></i>Importer un calcul
+                                    </button>
+                                    <button class="btn btn-info" onclick="generateReport()">
+                                        <i class="bi bi-file-text me-2"></i>Générer un rapport
+                                    </button>
+                                    <button class="btn btn-danger" onclick="showResetConfirmation()">
+                                        <i class="bi bi-trash me-2"></i>Tout réinitialiser
+                                    </button>
+                                </div>
+                                
+                                <div class="mt-5">
+                                    <h5 class="mb-3">Préférences</h5>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="autoSave" checked>
+                                        <label class="form-check-label" for="autoSave">
+                                            Sauvegarde automatique
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="showNotifications" checked>
+                                        <label class="form-check-label" for="showNotifications">
+                                            Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="darkModeSwitch" onchange="toggleDarkMode()">
+                                        <label class="form-check-label" for="darkModeSwitch">
+                                            Mode sombre
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 3: History -->
+            <div id="historiqueTab" class="tab-content" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header bg-maroc-green text-white d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-clock-history me-2"></i>Historique des calculs
+                        </div>
+                        <div>
+                            <span class="badge bg-light text-dark me-2" id="historyCount">0 calculs</span>
+                            <button class="btn btn-sm btn-light" onclick="clearHistory()">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="emptyHistory" class="text-center py-5">
+                            <i class="bi bi-clock-history display-1 text-muted mb-4"></i>
+                            <h3 class="mb-3">Aucun calcul sauvegardé</h3>
+                            <p class="text-muted mb-4">
+                                Vos calculs apparaîtront ici après les avoir sauvegardés depuis l'onglet Calcul.
+                            </p>
+                            <button class="btn btn-maroc-green" onclick="switchTab('calcul')">
+                                Retourner au calcul
+                            </button>
+                        </div>
+                        <div id="historyList" class="row">
+                            <!-- History cards will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 4: Report -->
+            <div id="rapportTab" class="tab-content" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header bg-maroc-green text-white">
+                        <i class="bi bi-file-text me-2"></i>Génération de rapports
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Options de génération</h5>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="includeStats" checked>
+                                            <label class="form-check-label" for="includeStats">
+                                                Inclure les statistiques détaillées
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="includeThresholds" checked>
+                                            <label class="form-check-label" for="includeThresholds">
+                                                Inclure les seuils appliqués
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="includeOffers" checked>
+                                            <label class="form-check-label" for="includeOffers">
+                                                Inclure la liste des offres
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="includeMethodology" checked>
+                                            <label class="form-check-label" for="includeMethodology">
+                                                Inclure la méthodologie de calcul
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="includeLegalRef" checked>
+                                            <label class="form-check-label" for="includeLegalRef">
+                                                Inclure les références légales
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-3">
+                                    <button class="btn btn-primary" onclick="generateReport()">
+                                        <i class="bi bi-file-text me-2"></i>Rapport texte (.txt)
+                                    </button>
+                                    <button class="btn pdf-export-btn" onclick="generateFullPDF()">
+                                        <i class="bi bi-file-pdf me-2"></i>Rapport complet (.pdf)
+                                    </button>
+                                    <button class="btn excel-export-btn" onclick="generateExcelReport()">
+                                        <i class="bi bi-file-excel me-2"></i>Rapport Excel (.xlsx)
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="bi bi-eye me-2"></i>Aperçu du rapport
+                                        </div>
+                                        <button class="btn btn-sm btn-light" onclick="printReport()">
+                                            <i class="bi bi-printer"></i>
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="reportPreview" class="mb-0" style="white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9rem; max-height: 500px; overflow-y: auto; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                                            Chargement...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 5: Export -->
+            <div id="exportTab" class="tab-content" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header bg-maroc-green text-white">
+                        <i class="bi bi-download me-2"></i>Exportation des données
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h5 class="mb-3">Tableau des résultats</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="exportTable">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Concurrent</th>
+                                                <th>Montant (DH)</th>
+                                                <th>Note Technique</th>
+                                                <th>Statut</th>
+                                                <th>Écart %</th>
+                                                <th>Observations</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="exportTableBody">
+                                            <!-- Data will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <i class="bi bi-file-excel me-2"></i>Export Excel
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Exportez le tableau des résultats au format Excel avec mise en forme.</p>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn excel-export-btn" onclick="exportTableToExcel()">
+                                                <i class="bi bi-file-earmark-excel me-2"></i>Exporter le tableau
+                                            </button>
+                                            <button class="btn btn-outline-success" onclick="exportFullDataToExcel()">
+                                                <i class="bi bi-file-spreadsheet me-2"></i>Exporter toutes les données
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-danger text-white">
+                                        <i class="bi bi-file-pdf me-2"></i>Export PDF
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Générez des rapports PDF professionnels avec toutes les informations.</p>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn pdf-export-btn" onclick="generateFullPDF()">
+                                                <i class="bi bi-file-pdf me-2"></i>Rapport complet PDF
+                                            </button>
+                                            <button class="btn btn-outline-danger" onclick="generateTablePDF()">
+                                                <i class="bi bi-table me-2"></i>Tableau uniquement
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header bg-dark text-white">
+                                        <i class="bi bi-archive me-2"></i>Export complet
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Exportez toutes les données du calcul dans différents formats.</p>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <button class="btn btn-primary" onclick="exportCalculation()">
+                                                <i class="bi bi-file-code me-2"></i>JSON (.json)
+                                            </button>
+                                            <button class="btn btn-success" onclick="generateReport()">
+                                                <i class="bi bi-file-text me-2"></i>Texte (.txt)
+                                            </button>
+                                            <button class="btn excel-export-btn" onclick="generateExcelReport()">
+                                                <i class="bi bi-file-excel me-2"></i>Excel (.xlsx)
+                                            </button>
+                                            <button class="btn pdf-export-btn" onclick="generateFullPDF()">
+                                                <i class="bi bi-file-pdf me-2"></i>PDF (.pdf)
+                                            </button>
+                                            <button class="btn btn-info" onclick="exportAsCSV()">
+                                                <i class="bi bi-filetype-csv me-2"></i>CSV (.csv)
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="mb-2">
+                        Application conforme au <strong>Décret n° 2-22-431 du 8 mars 2023</strong> relatif aux marchés publics
+                    </p>
+                    <p class="small text-light">
+                        Articles 43 & 44 - Évaluation financière des offres | Royaume du Maroc (HAFFAR ABDELFETTAH)
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-link text-white text-decoration-none me-3" onclick="showLegalInfo()">
+                        <i class="bi bi-journal-text me-1"></i>Références légales
+                    </button>
+                    <button class="btn btn-link text-white text-decoration-none me-3" onclick="showHelp()">
+                        <i class="bi bi-question-circle me-1"></i>Aide
+                    </button>
+                    <button class="btn btn-link text-white text-decoration-none" onclick="showAbout()">
+                        <i class="bi bi-info-circle me-1"></i>À propos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="text-center">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <h4 class="mt-3" id="loadingText">Génération du rapport...</h4>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div class="modal fade" id="importModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Importer des données</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Collez ici les données JSON exportées précédemment :</label>
+                        <textarea id="importData" class="form-control" rows="10" 
+                                  placeholder='{"calculationName": "Mon calcul", "estimation": 5000000, ...}'></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Vous pouvez également glisser-déposer un fichier JSON ou utiliser le bouton ci-dessous.
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" id="fileImport" class="form-control" accept=".json,.txt" onchange="handleFileImport(event)">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-maroc-green" onclick="importCalculation()">Importer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- SheetJS pour Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- FileSaver.js -->
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    
+    <!-- Application JavaScript -->
+    <script>
+        // ============================================================================
+        // ÉTATS GLOBAUX ET CONFIGURATION
+        // ============================================================================
+        
+        let state = {
+            darkMode: false,
+            marketType: 'travaux',
+            estimation: '',
+            taxIncluded: false,
+            offers: [],
+            technicalScoring: false,
+            technicalWeight: 60,
+            thresholds: {
+                travaux: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.20 },
+                fournitures: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 },
+                services: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 },
+                etudes: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 }
+            },
+            calculationName: 'Nouveau calcul',
+            calculationsHistory: [],
+            autoSave: true,
+            showNotifications: true
+        };
+        
+        let processedOffers = [];
+        let referencePrice = null;
+        let bestOffer = null;
+        
+        // ============================================================================
+        // FONCTIONS D'INITIALISATION
+        // ============================================================================
+        
+        function init() {
+            loadFromLocalStorage();
+            updateUI();
+            updateCalculation();
+            setupEventListeners();
+        }
+        
+        function setupEventListeners() {
+            // Auto-save sur les changements
+            document.getElementById('estimation').addEventListener('input', function() {
+                if (state.autoSave) updateCalculation();
+            });
+            
+            document.getElementById('marketType').addEventListener('change', function() {
+                if (state.autoSave) updateCalculation();
+            });
+            
+            // Empêcher la soumission du formulaire avec Enter
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (this.id === 'newCompany' || this.id === 'newAmount') {
+                            addOffer();
+                        }
+                    }
+                });
+            });
+            
+            // Drag and drop pour l'import
+            const importTextarea = document.getElementById('importData');
+            importTextarea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#e8f5e8';
+            });
+            
+            importTextarea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+            });
+            
+            importTextarea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                const file = e.dataTransfer.files[0];
+                if (file && (file.type === 'application/json' || file.name.endsWith('.json') || file.name.endsWith('.txt'))) {
+                    readFile(file);
+                } else {
+                    showError('Veuillez déposer un fichier JSON ou texte');
+                }
+            });
+        }
+        
+        function readFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('importData').value = e.target.result;
+            };
+            reader.readAsText(file);
+        }
+        
+        function loadFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('marchesPublicsData');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    
+                    if (data.calculationsHistory) {
+                        state.calculationsHistory = data.calculationsHistory;
+                    }
+                    
+                    if (data.thresholds) {
+                        state.thresholds = data.thresholds;
+                    }
+                    
+                    if (data.currentCalculation) {
+                        const calc = data.currentCalculation;
+                        state.marketType = calc.marketType || 'travaux';
+                        state.estimation = calc.estimation || '';
+                        state.taxIncluded = calc.taxIncluded || false;
+                        state.offers = calc.offers || [];
+                        state.technicalScoring = calc.technicalScoring || false;
+                        state.technicalWeight = calc.technicalWeight || 60;
+                        state.calculationName = calc.calculationName || 'Nouveau calcul';
+                    }
+                    
+                    if (data.autoSave !== undefined) state.autoSave = data.autoSave;
+                    if (data.showNotifications !== undefined) state.showNotifications = data.showNotifications;
+                }
+            } catch (e) {
+                console.error('Erreur lors du chargement des données:', e);
+                showError('Erreur lors du chargement des données sauvegardées');
+            }
+        }
+        
+        function saveToLocalStorage() {
+            if (!state.autoSave) return;
+            
+            const saveData = {
+                currentCalculation: {
+                    marketType: state.marketType,
+                    estimation: state.estimation,
+                    taxIncluded: state.taxIncluded,
+                    offers: state.offers,
+                    technicalScoring: state.technicalScoring,
+                    technicalWeight: state.technicalWeight,
+                    calculationName: state.calculationName
+                },
+                calculationsHistory: state.calculationsHistory,
+                thresholds: state.thresholds,
+                autoSave: state.autoSave,
+                showNotifications: state.showNotifications
+            };
+            
+            try {
+                localStorage.setItem('marchesPublicsData', JSON.stringify(saveData));
+            } catch (e) {
+                console.error('Erreur lors de la sauvegarde:', e);
+            }
+        }
+        
+        // ============================================================================
+        // FONCTIONS DE CALCUL
+        // ============================================================================
+        
+        function classifyOffer(offerAmount, estimation, marketType) {
+            const threshold = state.thresholds[marketType];
+            if (!threshold) {
+                return { status: 'acceptee', diffPercent: 0 };
+            }
+            
+            const diffPercent = ((offerAmount - estimation) / estimation) * 100;
+            
+            if (offerAmount > estimation * (1 + threshold.excessiveUpperBound)) {
+                return { status: 'excessive', diffPercent };
+            }
+            if (offerAmount < estimation * (1 - threshold.abnormalLowerBound)) {
+                return { status: 'anormalement_basse', diffPercent };
+            }
+            return { status: 'acceptee', diffPercent };
+        }
+        
+        function calculateReferencePrice(offers, estimation, marketType) {
+            const validOffers = offers.filter(o => o.status === 'acceptee').map(o => o.amount);
+            
+            if (validOffers.length === 0) return null;
+            
+            const allOffersAboveE = offers.every(o => o.amount > estimation);
+            
+            if (marketType === 'travaux' && allOffersAboveE) {
+                return { 
+                    value: estimation * 0.85, 
+                    formula: 'P = E × 0.85 (toutes offres > E)',
+                    method: 'travaux_toutes_offres_superieures'
+                };
+            }
+            
+            const sum = validOffers.reduce((acc, val) => acc + val, 0);
+            const avg = sum / validOffers.length;
+            
+            return { 
+                value: avg, 
+                formula: `P = Moyenne des ${validOffers.length} offres valides = ${sum.toLocaleString('fr-MA')} / ${validOffers.length}`,
+                method: 'moyenne_offres_valides'
+            };
+        }
+        
+        function findBestOffer(offers, referencePriceValue, technicalScoring, technicalWeight) {
+            const validOffers = offers.filter(o => o.status === 'acceptee');
+            
+            if (validOffers.length === 0) return null;
+            
+            if (!technicalScoring) {
+                const offersBelow = validOffers.filter(o => o.amount <= referencePriceValue);
+                
+                if (offersBelow.length > 0) {
+                    const best = offersBelow.reduce((best, current) => 
+                        Math.abs(current.amount - referencePriceValue) < Math.abs(best.amount - referencePriceValue) ? current : best
+                    );
+                    return { ...best, selectionMethod: 'plus_proche_en_dessous' };
+                }
+                
+                const best = validOffers.reduce((best, current) => 
+                    Math.abs(current.amount - referencePriceValue) < Math.abs(best.amount - referencePriceValue) ? current : best
+                );
+                return { ...best, selectionMethod: 'plus_proche_exces' };
+            }
+            
+            const priceWeight = 100 - technicalWeight;
+            const maxPrice = Math.max(...validOffers.map(o => o.amount));
+            
+            const scoredOffers = validOffers.map(offer => {
+                const priceScore = maxPrice > 0 ? ((maxPrice - offer.amount) / maxPrice) * 100 : 0;
+                const techScore = offer.technicalScore || 0;
+                const finalScore = (techScore * technicalWeight / 100) + (priceScore * priceWeight / 100);
+                return { ...offer, finalScore, priceScore, techScore };
+            }).sort((a, b) => b.finalScore - a.finalScore);
+            
+            return { ...scoredOffers[0], selectionMethod: 'notation_combinée' };
+        }
+        
+        function updateCalculation() {
+            // Mettre à jour l'état depuis les inputs
+            state.marketType = document.getElementById('marketType').value;
+            state.estimation = document.getElementById('estimation').value;
+            state.taxIncluded = document.getElementById('taxIncluded').checked;
+            state.technicalScoring = document.getElementById('technicalScoring').checked;
+            state.technicalWeight = parseInt(document.getElementById('technicalWeight').value);
+            state.calculationName = document.getElementById('calculationName').value;
+            
+            // Mettre à jour les seuils
+            state.thresholds[state.marketType].excessiveUpperBound = 
+                parseInt(document.getElementById('excessiveThreshold').value) / 100;
+            state.thresholds[state.marketType].abnormalLowerBound = 
+                parseInt(document.getElementById('abnormalThreshold').value) / 100;
+            
+            // Traiter les offres
+            if (state.estimation && state.offers.length > 0) {
+                processedOffers = state.offers.map(offer => {
+                    const classification = classifyOffer(
+                        offer.amount, 
+                        parseFloat(state.estimation), 
+                        state.marketType
+                    );
+                    return { ...offer, ...classification };
+                });
+                
+                referencePrice = calculateReferencePrice(
+                    processedOffers, 
+                    parseFloat(state.estimation), 
+                    state.marketType
+                );
+                
+                bestOffer = findBestOffer(
+                    processedOffers, 
+                    referencePrice ? referencePrice.value : 0, 
+                    state.technicalScoring, 
+                    state.technicalWeight
+                );
+            } else {
+                processedOffers = [];
+                referencePrice = null;
+                bestOffer = null;
+            }
+            
+            updateUI();
+            saveToLocalStorage();
+        }
+        
+        // ============================================================================
+        // FONCTIONS D'INTERFACE UTILISATEUR
+        // ============================================================================
+        
+        function updateUI() {
+            // Mettre à jour les inputs
+            document.getElementById('marketType').value = state.marketType;
+            document.getElementById('estimation').value = state.estimation;
+            document.getElementById('taxIncluded').checked = state.taxIncluded;
+            document.getElementById('technicalScoring').checked = state.technicalScoring;
+            document.getElementById('technicalWeight').value = state.technicalWeight;
+            document.getElementById('technicalWeightValue').textContent = state.technicalWeight;
+            document.getElementById('calculationName').value = state.calculationName;
+            document.getElementById('autoSave').checked = state.autoSave;
+            document.getElementById('showNotifications').checked = state.showNotifications;
+            document.getElementById('darkModeSwitch').checked = state.darkMode;
+            
+            // Mettre à jour les seuils dans l'UI
+            updateThresholdDisplay();
+            
+            // Mettre à jour l'affichage des offres
+            updateOffersTable();
+            
+            // Mettre à jour les résultats
+            updateResults();
+            
+            // Mettre à jour l'historique
+            updateHistory();
+            
+            // Mettre à jour l'aperçu du rapport
+            updateReportPreview();
+            
+            // Mettre à jour le tableau d'export
+            updateExportTable();
+            
+            // Activer/désactiver le bouton d'export
+            document.getElementById('exportBtn').disabled = state.offers.length === 0;
+            
+            // Afficher/masquer les sections
+            if (state.offers.length > 0) {
+                document.getElementById('offersTableSection').style.display = 'block';
+                document.getElementById('emptyState').style.display = 'none';
+            } else {
+                document.getElementById('offersTableSection').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+        
+        function updateThresholdDisplay() {
+            const marketType = document.getElementById('marketType').value;
+            const thresholds = state.thresholds[marketType];
+            
+            document.getElementById('excessiveThreshold').value = thresholds.excessiveUpperBound * 100;
+            document.getElementById('abnormalThreshold').value = thresholds.abnormalLowerBound * 100;
+            
+            document.getElementById('excessivePercent').textContent = (thresholds.excessiveUpperBound * 100);
+            document.getElementById('abnormalPercent').textContent = (thresholds.abnormalLowerBound * 100);
+            
+            // Mettre à jour tous les champs de seuils
+            document.getElementById('thresholdTravauxExcessive').value = state.thresholds.travaux.excessiveUpperBound * 100;
+            document.getElementById('thresholdTravauxAbnormal').value = state.thresholds.travaux.abnormalLowerBound * 100;
+            document.getElementById('thresholdFournituresExcessive').value = state.thresholds.fournitures.excessiveUpperBound * 100;
+            document.getElementById('thresholdFournituresAbnormal').value = state.thresholds.fournitures.abnormalLowerBound * 100;
+            document.getElementById('thresholdServicesExcessive').value = state.thresholds.services.excessiveUpperBound * 100;
+            document.getElementById('thresholdServicesAbnormal').value = state.thresholds.services.abnormalLowerBound * 100;
+            document.getElementById('thresholdEtudesExcessive').value = state.thresholds.etudes.excessiveUpperBound * 100;
+            document.getElementById('thresholdEtudesAbnormal').value = state.thresholds.etudes.abnormalLowerBound * 100;
+            
+            if (state.estimation) {
+                const estimation = parseFloat(state.estimation);
+                document.getElementById('excessiveThresholdDisplay').textContent = 
+                    (estimation * (1 + thresholds.excessiveUpperBound)).toLocaleString('fr-MA') + ' DH';
+                document.getElementById('abnormalThresholdDisplay').textContent = 
+                    (estimation * (1 - thresholds.abnormalLowerBound)).toLocaleString('fr-MA') + ' DH';
+            }
+        }
+        
+        function updateOffersTable() {
+            const tbody = document.getElementById('offersTableBody');
+            tbody.innerHTML = '';
+            
+            document.getElementById('offersCount').textContent = processedOffers.length;
+            
+            // Mettre à jour l'affichage des colonnes techniques
+            if (state.technicalScoring) {
+                document.getElementById('technicalScoreHeader').style.display = 'table-cell';
+                document.getElementById('newTechnicalScoreSection').style.display = 'block';
+                document.getElementById('technicalWeightSection').style.display = 'block';
+            } else {
+                document.getElementById('technicalScoreHeader').style.display = 'none';
+                document.getElementById('newTechnicalScoreSection').style.display = 'none';
+                document.getElementById('technicalWeightSection').style.display = 'none';
+            }
+            
+            // Remplir le tableau
+            processedOffers.forEach((offer, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'offer-row';
+                if (bestOffer && bestOffer.id === offer.id) {
+                    tr.classList.add('highlight');
+                }
+                
+                // Déterminer la classe CSS pour le statut
+                let statusClass = '';
+                let statusText = '';
+                switch (offer.status) {
+                    case 'acceptee':
+                        statusClass = 'badge-acceptee';
+                        statusText = 'Acceptée';
+                        break;
+                    case 'excessive':
+                        statusClass = 'badge-excessive';
+                        statusText = 'Excessive';
+                        break;
+                    case 'anormalement_basse':
+                        statusClass = 'badge-anormal';
+                        statusText = 'Anormalement basse';
+                        break;
+                }
+                
+                // Vérifier si c'est la meilleure offre
+                const isBestOffer = bestOffer && bestOffer.id === offer.id;
+                
+                tr.innerHTML = `
+                    <td class="fw-bold">${index + 1}</td>
+                    <td>
+                        <strong>${offer.company}</strong>
+                        ${isBestOffer ? '<span class="best-offer-badge ms-2">⭐ Meilleure offre</span>' : ''}
+                    </td>
+                    <td class="text-end fw-bold">
+                        ${offer.amount.toLocaleString('fr-MA')} DH
+                    </td>
+                    ${state.technicalScoring ? `
+                        <td class="text-center">
+                            <span class="badge bg-info">${offer.technicalScore || 0}/100</span>
+                        </td>
+                    ` : ''}
+                    <td>
+                        <span class="badge ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                    <td class="${offer.diffPercent > 0 ? 'text-danger' : 'text-success'} fw-bold">
+                        ${offer.diffPercent > 0 ? '+' : ''}${offer.diffPercent.toFixed(2)}%
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary me-1" 
+                                onclick="duplicateOffer(${offer.id})"
+                                title="Dupliquer">
+                            <i class="bi bi-copy"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" 
+                                onclick="removeOffer(${offer.id})"
+                                title="Supprimer">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Mettre à jour les statistiques
+            updateStatistics();
+        }
+        
+        function updateStatistics() {
+            if (processedOffers.length === 0) return;
+            
+            const validOffers = processedOffers.filter(o => o.status === 'acceptee');
+            const excludedOffers = processedOffers.filter(o => o.status !== 'acceptee');
+            
+            // Montant moyen
+            const averageAmount = validOffers.length > 0 
+                ? validOffers.reduce((sum, o) => sum + o.amount, 0) / validOffers.length 
+                : 0;
+            document.getElementById('averageAmount').textContent = 
+                averageAmount.toLocaleString('fr-MA', { maximumFractionDigits: 0 }) + ' DH';
+            
+            // Plage des offres
+            const minAmount = Math.min(...state.offers.map(o => o.amount));
+            const maxAmount = Math.max(...state.offers.map(o => o.amount));
+            document.getElementById('offerRange').textContent = 
+                `${minAmount.toLocaleString('fr-MA')} - ${maxAmount.toLocaleString('fr-MA')} DH`;
+            
+            // Écart moyen
+            const averageDiff = validOffers.length > 0 
+                ? validOffers.reduce((sum, o) => sum + o.diffPercent, 0) / validOffers.length 
+                : 0;
+            document.getElementById('averageDiff').textContent = 
+                averageDiff.toFixed(1) + '%';
+            
+            // Taux d'écartement
+            const exclusionRate = (excludedOffers.length / processedOffers.length * 100);
+            document.getElementById('exclusionRate').textContent = 
+                exclusionRate.toFixed(1) + '%';
+        }
+        
+        function updateResults() {
+            // Prix de référence
+            if (referencePrice) {
+                document.getElementById('referencePrice').textContent = 
+                    referencePrice.value.toLocaleString('fr-MA') + ' DH';
+                document.getElementById('referenceFormula').textContent = 
+                    referencePrice.formula;
+            } else {
+                document.getElementById('referencePrice').textContent = 'Non calculable';
+                document.getElementById('referenceFormula').textContent = '';
+            }
+            
+            // Meilleure offre
+            if (bestOffer) {
+                document.getElementById('bestOfferCompany').textContent = bestOffer.company;
+                document.getElementById('bestOfferAmount').textContent = 
+                    bestOffer.amount.toLocaleString('fr-MA') + ' DH';
+                
+                if (referencePrice) {
+                    const diffPercent = ((bestOffer.amount - referencePrice.value) / referencePrice.value * 100);
+                    document.getElementById('bestOfferDiff').textContent = 
+                        `Écart avec P: ${diffPercent.toFixed(2)}%`;
+                }
+            } else {
+                document.getElementById('bestOfferCompany').textContent = 'Aucune';
+                document.getElementById('bestOfferAmount').textContent = '';
+                document.getElementById('bestOfferDiff').textContent = '';
+            }
+        }
+        
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            const emptyHistory = document.getElementById('emptyHistory');
+            const historyCount = document.getElementById('historyCount');
+            
+            historyCount.textContent = `${state.calculationsHistory.length} calculs`;
+            
+            if (state.calculationsHistory.length === 0) {
+                historyList.innerHTML = '';
+                emptyHistory.style.display = 'block';
+                return;
+            }
+            
+            emptyHistory.style.display = 'none';
+            historyList.innerHTML = '';
+            
+            state.calculationsHistory.forEach(calc => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4 mb-3';
+                
+                col.innerHTML = `
+                    <div class="card history-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0 text-truncate">${calc.name}</h6>
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        onclick="deleteCalculation(${calc.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <p class="card-text small">
+                                <strong>Type:</strong> ${calc.marketType}<br>
+                                <strong>Estimation:</strong> ${parseFloat(calc.estimation).toLocaleString('fr-MA')} DH<br>
+                                <strong>Offres:</strong> ${calc.validOffers} valides / ${calc.excludedOffers} écartées<br>
+                                ${calc.referencePrice ? `<strong>Prix de référence:</strong> ${calc.referencePrice.value.toLocaleString('fr-MA')} DH` : ''}
+                            </p>
+                            <div class="mt-3">
+                                <button class="btn btn-sm btn-maroc-green w-100" 
+                                        onclick="loadCalculation(${calc.id})">
+                                    Charger ce calcul
+                                </button>
+                            </div>
+                            <small class="text-muted d-block mt-3">
+                                <i class="bi bi-calendar me-1"></i>
+                                ${new Date(calc.date).toLocaleDateString('fr-MA')} ${new Date(calc.date).toLocaleTimeString('fr-MA', {hour: '2-digit', minute:'2-digit'})}
+                            </small>
+                        </div>
+                    </div>
+                `;
+                
+                historyList.appendChild(col);
+            });
+        }
+        
+        function updateExportTable() {
+            const tbody = document.getElementById('exportTableBody');
+            tbody.innerHTML = '';
+            
+            processedOffers.forEach((offer, index) => {
+                let statusText = '';
+                switch (offer.status) {
+                    case 'acceptee': statusText = 'Acceptée'; break;
+                    case 'excessive': statusText = 'Excessive'; break;
+                    case 'anormalement_basse': statusText = 'Anormalement basse'; break;
+                }
+                
+                let observation = '';
+                if (bestOffer && bestOffer.id === offer.id) {
+                    observation = '⭐ Offre retenue (meilleure offre)';
+                } else if (offer.status === 'excessive') {
+                    observation = 'Écartée - montant excessif';
+                } else if (offer.status === 'anormalement_basse') {
+                    observation = 'Écartée - montant anormalement bas';
+                } else {
+                    observation = 'Offre valide';
+                }
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${offer.company}</td>
+                    <td class="fw-bold">${offer.amount.toLocaleString('fr-MA')}</td>
+                    <td>${offer.technicalScore || '-'}</td>
+                    <td><span class="badge ${offer.status === 'acceptee' ? 'bg-success' : offer.status === 'excessive' ? 'bg-warning' : 'bg-danger'}">${statusText}</span></td>
+                    <td class="${offer.diffPercent > 0 ? 'text-danger' : 'text-success'}">${offer.diffPercent > 0 ? '+' : ''}${offer.diffPercent.toFixed(2)}%</td>
+                    <td>${observation}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        function updateReportPreview() {
+            const preview = document.getElementById('reportPreview');
+            
+            if (!state.estimation || state.offers.length === 0) {
+                preview.innerHTML = '<div class="text-center text-muted p-4"><i class="bi bi-file-text display-4 mb-3"></i><p>Ajoutez des données pour générer un rapport</p></div>';
+                return;
+            }
+            
+            const validOffers = processedOffers.filter(o => o.status === 'acceptee');
+            const excludedOffers = processedOffers.filter(o => o.status !== 'acceptee');
+            const excessiveOffers = excludedOffers.filter(o => o.status === 'excessive');
+            const abnormalLowOffers = excludedOffers.filter(o => o.status === 'anormalement_basse');
+            
+            let report = `RAPPORT DE CALCUL DU PRIX DE RÉFÉRENCE
+========================================
+Date: ${new Date().toLocaleDateString('fr-MA')} ${new Date().toLocaleTimeString('fr-MA', {hour: '2-digit', minute:'2-digit'})}
+Nom du calcul: ${state.calculationName}
+Type de marché: ${state.marketType}
+Estimation initiale (E): ${parseFloat(state.estimation).toLocaleString('fr-MA')} DH
+${state.taxIncluded ? 'Montants TTC' : 'Montants HT'}
+
+SEUILS APPLIQUÉS:
+- Excessive: +${state.thresholds[state.marketType].excessiveUpperBound * 100}%
+- Anormalement basse: -${state.thresholds[state.marketType].abnormalLowerBound * 100}%
+
+STATISTIQUES:
+- Total des offres reçues: ${state.offers.length}
+- Offres acceptées: ${validOffers.length}
+- Offres excessives: ${excessiveOffers.length}
+- Offres anormalement basses: ${abnormalLowOffers.length}
+- Taux d'écartement: ${((excludedOffers.length / processedOffers.length) * 100).toFixed(1)}%
+
+RÉSULTATS:
+- Prix de référence calculé (P): ${referencePrice ? `${referencePrice.value.toLocaleString('fr-MA')} DH` : 'Non calculable'}
+- Meilleure offre: ${bestOffer ? `${bestOffer.company} - ${bestOffer.amount.toLocaleString('fr-MA')} DH` : 'Aucune'}
+${bestOffer && referencePrice ? `  Écart avec P: ${((bestOffer.amount - referencePrice.value) / referencePrice.value * 100).toFixed(2)}%` : ''}
+
+---
+Conforme au Décret n° 2-22-431 du 8 mars 2023
+Royaume du Maroc - Marchés Publics`;
+            
+            preview.textContent = report;
+        }
+        
+        // ============================================================================
+        // GESTION DES OFFRES
+        // ============================================================================
+        
+        function addOffer() {
+            const company = document.getElementById('newCompany').value.trim();
+            const amount = document.getElementById('newAmount').value;
+            const technicalScore = document.getElementById('newTechnicalScore').value;
+            
+            if (!company || !amount) {
+                showWarning('Veuillez remplir le nom du concurrent et le montant');
+                return;
+            }
+            
+            if (parseFloat(amount) <= 0) {
+                showWarning('Le montant doit être supérieur à 0');
+                return;
+            }
+            
+            const newOffer = {
+                id: Date.now(),
+                company: company,
+                amount: parseFloat(amount),
+                technicalScore: state.technicalScoring ? (parseFloat(technicalScore) || 0) : null
+            };
+            
+            state.offers.push(newOffer);
+            
+            // Réinitialiser les champs
+            document.getElementById('newCompany').value = '';
+            document.getElementById('newAmount').value = '';
+            document.getElementById('newTechnicalScore').value = '';
+            
+            updateCalculation();
+            
+            // Focus sur le champ entreprise
+            document.getElementById('newCompany').focus();
+            
+            if (state.showNotifications) {
+                showSuccess('Offre ajoutée avec succès !');
+            }
+        }
+        
+        function removeOffer(id) {
+            Swal.fire({
+                title: 'Supprimer cette offre ?',
+                text: "Cette action est irréversible.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    state.offers = state.offers.filter(o => o.id !== id);
+                    updateCalculation();
+                    showSuccess('Offre supprimée avec succès !');
+                }
+            });
+        }
+        
+        function duplicateOffer(id) {
+            const offerToDuplicate = state.offers.find(o => o.id === id);
+            if (offerToDuplicate) {
+                const duplicatedOffer = {
+                    ...offerToDuplicate,
+                    id: Date.now(),
+                    company: `${offerToDuplicate.company} (copie)`
+                };
+                state.offers.push(duplicatedOffer);
+                updateCalculation();
+                showSuccess('Offre dupliquée avec succès !');
+            }
+        }
+        
+        function editOffer(id, field, value) {
+            const offerIndex = state.offers.findIndex(o => o.id === id);
+            if (offerIndex !== -1) {
+                if (field === 'amount') {
+                    state.offers[offerIndex].amount = parseFloat(value);
+                } else if (field === 'technicalScore') {
+                    state.offers[offerIndex].technicalScore = parseFloat(value);
+                }
+                updateCalculation();
+            }
+        }
+        
+        // ============================================================================
+        // GESTION DES CALCULS
+        // ============================================================================
+        
+        function saveCurrentCalculation() {
+            if (!state.estimation || state.offers.length === 0) {
+                showWarning('Veuillez ajouter des données avant de sauvegarder');
+                return;
+            }
+            
+            const newCalculation = {
+                id: Date.now(),
+                name: state.calculationName,
+                date: new Date().toISOString(),
+                marketType: state.marketType,
+                estimation: state.estimation,
+                offers: state.offers,
+                technicalScoring: state.technicalScoring,
+                technicalWeight: state.technicalWeight,
+                referencePrice: referencePrice,
+                bestOffer: bestOffer,
+                validOffers: processedOffers.filter(o => o.status === 'acceptee').length,
+                excludedOffers: processedOffers.filter(o => o.status !== 'acceptee').length
+            };
+            
+            state.calculationsHistory = [newCalculation, ...state.calculationsHistory.slice(0, 19)];
+            
+            showSuccess('Calcul sauvegardé dans l\'historique !');
+            
+            updateUI();
+        }
+        
+        function loadCalculation(id) {
+            const calculation = state.calculationsHistory.find(c => c.id === id);
+            if (!calculation) return;
+            
+            state.marketType = calculation.marketType;
+            state.estimation = calculation.estimation;
+            state.offers = calculation.offers;
+            state.technicalScoring = calculation.technicalScoring;
+            state.technicalWeight = calculation.technicalWeight;
+            state.calculationName = calculation.name;
+            
+            switchTab('calcul');
+            updateCalculation();
+            
+            showSuccess('Calcul chargé avec succès !');
+        }
+        
+        function deleteCalculation(id) {
+            Swal.fire({
+                title: 'Supprimer ce calcul ?',
+                text: "Cette action est irréversible.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    state.calculationsHistory = state.calculationsHistory.filter(c => c.id !== id);
+                    updateUI();
+                    showSuccess('Calcul supprimé de l\'historique !');
+                }
+            });
+        }
+        
+        function clearHistory() {
+            Swal.fire({
+                title: 'Vider l\'historique ?',
+                text: "Tous les calculs sauvegardés seront supprimés définitivement.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, tout supprimer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    state.calculationsHistory = [];
+                    updateUI();
+                    showSuccess('Historique vidé avec succès !');
+                }
+            });
+        }
+        
+        // ============================================================================
+        // IMPORT/EXPORT
+        // ============================================================================
+        
+        function exportCalculation() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune offre à exporter');
+                return;
+            }
+            
+            const data = {
+                calculationName: state.calculationName,
+                marketType: state.marketType,
+                estimation: state.estimation,
+                taxIncluded: state.taxIncluded,
+                offers: state.offers,
+                technicalScoring: state.technicalScoring,
+                technicalWeight: state.technicalWeight,
+                thresholds: state.thresholds,
+                referencePrice: referencePrice,
+                bestOffer: bestOffer,
+                dateExported: new Date().toISOString(),
+                version: '2.0'
+            };
+            
+            const jsonString = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            saveAs(blob, `calcul-prix-reference-${Date.now()}.json`);
+            
+            showSuccess('Calcul exporté avec succès !');
+        }
+        
+        function importCalculation() {
+            const importData = document.getElementById('importData').value.trim();
+            
+            if (!importData) {
+                showWarning('Veuillez coller des données JSON à importer');
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(importData);
+                
+                // Validation des données
+                if (!data.offers || !Array.isArray(data.offers)) {
+                    throw new Error('Format de données invalide');
+                }
+                
+                Swal.fire({
+                    title: 'Confirmer l\'import',
+                    text: `Voulez-vous importer le calcul "${data.calculationName || 'Sans nom'}" ? Les données actuelles seront remplacées.`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, importer',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (data.marketType) state.marketType = data.marketType;
+                        if (data.estimation) state.estimation = data.estimation;
+                        if (data.taxIncluded !== undefined) state.taxIncluded = data.taxIncluded;
+                        if (data.offers) state.offers = data.offers;
+                        if (data.technicalScoring !== undefined) state.technicalScoring = data.technicalScoring;
+                        if (data.technicalWeight) state.technicalWeight = data.technicalWeight;
+                        if (data.thresholds) state.thresholds = data.thresholds;
+                        if (data.calculationName) state.calculationName = data.calculationName;
+                        
+                        // Fermer la modal
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('importModal'));
+                        modal.hide();
+                        
+                        updateCalculation();
+                        
+                        showSuccess('Calcul importé avec succès !');
+                    }
+                });
+            } catch (e) {
+                showError('Erreur lors de l\'import: Format JSON invalide ou données corrompues');
+                console.error(e);
+            }
+        }
+        
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('importData').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        // ============================================================================
+        // GÉNÉRATION DE RAPPORTS
+        // ============================================================================
+        
+        function generateReport() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune donnée à exporter');
+                return;
+            }
+            
+            showLoading('Génération du rapport texte...');
+            
+            setTimeout(() => {
+                let report = `RAPPORT DE CALCUL DU PRIX DE RÉFÉRENCE
+========================================
+Date: ${new Date().toLocaleDateString('fr-MA')} ${new Date().toLocaleTimeString('fr-MA', {hour: '2-digit', minute:'2-digit'})}
+Nom du calcul: ${state.calculationName}
+Type de marché: ${state.marketType}
+Estimation initiale (E): ${parseFloat(state.estimation).toLocaleString('fr-MA')} DH
+${state.taxIncluded ? 'Montants TTC' : 'Montants HT'}
+
+MÉTHODOLOGIE:
+${referencePrice?.method === 'travaux_toutes_offres_superieures' 
+    ? 'Prix de référence = 85% de l\'estimation (toutes offres supérieures à E) selon Article 44'
+    : 'Prix de référence = moyenne des offres valides selon Article 43'}
+
+SEUILS APPLIQUÉS (Article 44):
+- Excessive: +${state.thresholds[state.marketType].excessiveUpperBound * 100}%
+- Anormalement basse: -${state.thresholds[state.marketType].abnormalLowerBound * 100}%
+
+DÉTAIL DES OFFRES REÇUES:
+${state.offers.map((offer, index) => {
+    const classification = classifyOffer(offer.amount, parseFloat(state.estimation), state.marketType);
+    return `${index + 1}. ${offer.company}
+   Montant: ${offer.amount.toLocaleString('fr-MA')} DH
+   ${offer.technicalScore ? `Note technique: ${offer.technicalScore}/100` : ''}
+   Statut: ${classification.status === 'acceptee' ? 'Acceptée' : classification.status === 'excessive' ? 'Excessive (écartée)' : 'Anormalement basse (écartée)'}
+   Écart: ${classification.diffPercent > 0 ? '+' : ''}${classification.diffPercent.toFixed(2)}%`;
+}).join('\n\n')}
+
+STATISTIQUES DE L'ANALYSE:
+- Total des offres reçues: ${state.offers.length}
+- Offres acceptées: ${processedOffers.filter(o => o.status === 'acceptee').length}
+- Offres excessives: ${processedOffers.filter(o => o.status === 'excessive').length}
+- Offres anormalement basses: ${processedOffers.filter(o => o.status === 'anormalement_basse').length}
+- Taux d'écartement: ${((processedOffers.filter(o => o.status !== 'acceptee').length / processedOffers.length) * 100).toFixed(1)}%
+
+RÉSULTATS FINAUX:
+- Prix de référence calculé (P): ${referencePrice ? `${referencePrice.value.toLocaleString('fr-MA')} DH (${referencePrice.formula})` : 'Non calculable'}
+- Meilleure offre retenue: ${bestOffer ? `${bestOffer.company} - ${bestOffer.amount.toLocaleString('fr-MA')} DH` : 'Aucune'}
+${bestOffer && referencePrice ? `  Écart par rapport au prix de référence: ${((bestOffer.amount - referencePrice.value) / referencePrice.value * 100).toFixed(2)}%` : ''}
+
+RÉFÉRENCES LÉGALES:
+- Décret n° 2-22-431 du 8 mars 2023 relatif aux marchés publics
+- Article 43: Détermination du prix de référence
+- Article 44: Seuils d'écartement des offres
+
+---
+Document généré automatiquement
+Royaume du Maroc - Ministère de l'Économie et des Finances
+Service des Marchés Publics`;
+
+                const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+                saveAs(blob, `rapport-prix-reference-${Date.now()}.txt`);
+                
+                hideLoading();
+                showSuccess('Rapport texte généré avec succès !');
+            }, 1000);
+        }
+        
+        function generateExcelReport() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune donnée à exporter');
+                return;
+            }
+            
+            showLoading('Génération du rapport Excel...');
+            
+            setTimeout(() => {
+                try {
+                    // Création du classeur Excel
+                    const wb = XLSX.utils.book_new();
+                    
+                    // Feuille 1: Données principales
+                    const mainData = [
+                        ['RAPPORT DE CALCUL DU PRIX DE RÉFÉRENCE'],
+                        [''],
+                        ['Date', new Date().toLocaleDateString('fr-MA')],
+                        ['Nom du calcul', state.calculationName],
+                        ['Type de marché', state.marketType],
+                        ['Estimation initiale (E)', parseFloat(state.estimation)],
+                        ['Montants', state.taxIncluded ? 'TTC' : 'HT'],
+                        [''],
+                        ['SEUILS APPLIQUÉS'],
+                        ['Excessive', `${state.thresholds[state.marketType].excessiveUpperBound * 100}%`],
+                        ['Anormalement basse', `${state.thresholds[state.marketType].abnormalLowerBound * 100}%`],
+                        [''],
+                        ['RÉSULTATS'],
+                        ['Prix de référence (P)', referencePrice ? referencePrice.value : 'N/A'],
+                        ['Meilleure offre', bestOffer ? bestOffer.company : 'N/A'],
+                        ['Montant meilleure offre', bestOffer ? bestOffer.amount : 'N/A'],
+                        ['Écart avec P', bestOffer && referencePrice ? `${((bestOffer.amount - referencePrice.value) / referencePrice.value * 100).toFixed(2)}%` : 'N/A']
+                    ];
+                    
+                    const ws1 = XLSX.utils.aoa_to_sheet(mainData);
+                    XLSX.utils.book_append_sheet(wb, ws1, 'Résumé');
+                    
+                    // Feuille 2: Détail des offres
+                    const offersData = [
+                        ['N°', 'Concurrent', 'Montant (DH)', 'Note Technique', 'Statut', 'Écart %', 'Observations']
+                    ];
+                    
+                    processedOffers.forEach((offer, index) => {
+                        let statusText = '';
+                        switch (offer.status) {
+                            case 'acceptee': statusText = 'Acceptée'; break;
+                            case 'excessive': statusText = 'Excessive'; break;
+                            case 'anormalement_basse': statusText = 'Anormalement basse'; break;
+                        }
+                        
+                        let observation = '';
+                        if (bestOffer && bestOffer.id === offer.id) {
+                            observation = 'Offre retenue (meilleure offre)';
+                        } else if (offer.status === 'excessive') {
+                            observation = 'Écartée - montant excessif';
+                        } else if (offer.status === 'anormalement_basse') {
+                            observation = 'Écartée - montant anormalement bas';
+                        } else {
+                            observation = 'Offre valide';
+                        }
+                        
+                        offersData.push([
+                            index + 1,
+                            offer.company,
+                            offer.amount,
+                            offer.technicalScore || '-',
+                            statusText,
+                            offer.diffPercent,
+                            observation
+                        ]);
+                    });
+                    
+                    const ws2 = XLSX.utils.aoa_to_sheet(offersData);
+                    XLSX.utils.book_append_sheet(wb, ws2, 'Offres');
+                    
+                    // Feuille 3: Statistiques
+                    const validOffers = processedOffers.filter(o => o.status === 'acceptee');
+                    const excludedOffers = processedOffers.filter(o => o.status !== 'acceptee');
+                    const averageAmount = validOffers.length > 0 
+                        ? validOffers.reduce((sum, o) => sum + o.amount, 0) / validOffers.length 
+                        : 0;
+                    
+                    const statsData = [
+                        ['STATISTIQUES'],
+                        [''],
+                        ['Total des offres reçues', state.offers.length],
+                        ['Offres acceptées', validOffers.length],
+                        ['Offres excessives', excludedOffers.filter(o => o.status === 'excessive').length],
+                        ['Offres anormalement basses', excludedOffers.filter(o => o.status === 'anormalement_basse').length],
+                        ['Taux d\'écartement', `${((excludedOffers.length / processedOffers.length) * 100).toFixed(1)}%`],
+                        ['Montant moyen des offres valides', averageAmount],
+                        ['Montant minimum', Math.min(...state.offers.map(o => o.amount))],
+                        ['Montant maximum', Math.max(...state.offers.map(o => o.amount))],
+                        ['Écart moyen', validOffers.length > 0 
+                            ? validOffers.reduce((sum, o) => sum + o.diffPercent, 0) / validOffers.length 
+                            : 0]
+                    ];
+                    
+                    const ws3 = XLSX.utils.aoa_to_sheet(statsData);
+                    XLSX.utils.book_append_sheet(wb, ws3, 'Statistiques');
+                    
+                    // Génération du fichier
+                    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    saveAs(blob, `rapport-prix-reference-${Date.now()}.xlsx`);
+                    
+                    hideLoading();
+                    showSuccess('Rapport Excel généré avec succès !');
+                } catch (error) {
+                    hideLoading();
+                    showError('Erreur lors de la génération du fichier Excel: ' + error.message);
+                }
+            }, 1500);
+        }
+        
+        function exportTableToExcel() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune donnée à exporter');
+                return;
+            }
+            
+            showLoading('Export du tableau en Excel...');
+            
+            setTimeout(() => {
+                try {
+                    const wb = XLSX.utils.book_new();
+                    const wsData = [
+                        ['Tableau des offres - Calcul du prix de référence'],
+                        [''],
+                        ['N°', 'Concurrent', 'Montant (DH)', 'Note Technique', 'Statut', 'Écart %', 'Observations']
+                    ];
+                    
+                    processedOffers.forEach((offer, index) => {
+                        let statusText = '';
+                        switch (offer.status) {
+                            case 'acceptee': statusText = 'Acceptée'; break;
+                            case 'excessive': statusText = 'Excessive'; break;
+                            case 'anormalement_basse': statusText = 'Anormalement basse'; break;
+                        }
+                        
+                        let observation = '';
+                        if (bestOffer && bestOffer.id === offer.id) {
+                            observation = '⭐ Offre retenue (meilleure offre)';
+                        } else if (offer.status === 'excessive') {
+                            observation = 'Écartée - montant excessif';
+                        } else if (offer.status === 'anormalement_basse') {
+                            observation = 'Écartée - montant anormalement bas';
+                        } else {
+                            observation = 'Offre valide';
+                        }
+                        
+                        wsData.push([
+                            index + 1,
+                            offer.company,
+                            offer.amount,
+                            offer.technicalScore || '-',
+                            statusText,
+                            offer.diffPercent,
+                            observation
+                        ]);
+                    });
+                    
+                    // Ajouter un résumé
+                    wsData.push(['']);
+                    wsData.push(['RÉSUMÉ']);
+                    wsData.push(['Estimation (E)', parseFloat(state.estimation)]);
+                    wsData.push(['Prix de référence (P)', referencePrice ? referencePrice.value : 'N/A']);
+                    wsData.push(['Meilleure offre', bestOffer ? bestOffer.company : 'N/A']);
+                    
+                    const ws = XLSX.utils.aoa_to_sheet(wsData);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Offres');
+                    
+                    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    saveAs(blob, `tableau-offres-${Date.now()}.xlsx`);
+                    
+                    hideLoading();
+                    showSuccess('Tableau exporté en Excel avec succès !');
+                } catch (error) {
+                    hideLoading();
+                    showError('Erreur lors de l\'export Excel: ' + error.message);
+                }
+            }, 1000);
+        }
+        
+        function exportFullDataToExcel() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune donnée à exporter');
+                return;
+            }
+            
+            showLoading('Export des données complètes en Excel...');
+            
+            setTimeout(() => {
+                try {
+                    const wb = XLSX.utils.book_new();
+                    
+                    // Feuille 1: Résumé complet
+                    const summaryData = [
+                        ['RAPPORT COMPLET - CALCUL DU PRIX DE RÉFÉRENCE'],
+                        ['Conforme au Décret n° 2-22-431 du 8 mars 2023'],
+                        [''],
+                        ['INFORMATIONS GÉNÉRALES'],
+                        ['Date du calcul', new Date().toLocaleDateString('fr-MA')],
+                        ['Heure', new Date().toLocaleTimeString('fr-MA')],
+                        ['Nom du calcul', state.calculationName],
+                        ['Type de marché', state.marketType],
+                        ['Estimation initiale (E)', parseFloat(state.estimation), 'DH'],
+                        ['Mode de calcul', state.taxIncluded ? 'TTC' : 'HT'],
+                        ['Notation technique', state.technicalScoring ? 'Activée' : 'Désactivée'],
+                        state.technicalScoring ? ['Poids technique', state.technicalWeight + '%'] : ['', ''],
+                        [''],
+                        ['PARAMÈTRES APPLIQUÉS'],
+                        ['Seuil excessive', (state.thresholds[state.marketType].excessiveUpperBound * 100) + '%'],
+                        ['Seuil anormalement basse', (state.thresholds[state.marketType].abnormalLowerBound * 100) + '%'],
+                        [''],
+                        ['RÉSULTATS PRINCIPAUX'],
+                        ['Prix de référence (P)', referencePrice ? referencePrice.value : 'N/A', 'DH'],
+                        ['Formule de calcul', referencePrice ? referencePrice.formula : 'N/A'],
+                        ['Meilleure offre retenue', bestOffer ? bestOffer.company : 'N/A'],
+                        ['Montant de la meilleure offre', bestOffer ? bestOffer.amount : 'N/A', 'DH'],
+                        bestOffer && referencePrice ? ['Écart avec P', ((bestOffer.amount - referencePrice.value) / referencePrice.value * 100).toFixed(2) + '%'] : ['', ''],
+                        [''],
+                        ['STATISTIQUES'],
+                        ['Total offres reçues', state.offers.length],
+                        ['Offres acceptées', processedOffers.filter(o => o.status === 'acceptee').length],
+                        ['Offres excessives', processedOffers.filter(o => o.status === 'excessive').length],
+                        ['Offres anormalement basses', processedOffers.filter(o => o.status === 'anormalement_basse').length],
+                        ['Taux d\'écartement', ((processedOffers.filter(o => o.status !== 'acceptee').length / processedOffers.length) * 100).toFixed(1) + '%']
+                    ];
+                    
+                    const ws1 = XLSX.utils.aoa_to_sheet(summaryData);
+                    XLSX.utils.book_append_sheet(wb, ws1, 'Résumé');
+                    
+                    // Feuille 2: Détail des offres
+                    const offersData = [
+                        ['DÉTAIL DES OFFRES REÇUES'],
+                        [''],
+                        ['N°', 'Concurrent', 'Montant (DH)', 'Note Technique', 'Statut', 'Écart par rapport à E', 'Observations', 'Montant seuil bas', 'Montant seuil haut']
+                    ];
+                    
+                    const estimation = parseFloat(state.estimation);
+                    const seuilBas = estimation * (1 - state.thresholds[state.marketType].abnormalLowerBound);
+                    const seuilHaut = estimation * (1 + state.thresholds[state.marketType].excessiveUpperBound);
+                    
+                    processedOffers.forEach((offer, index) => {
+                        let statusText = '';
+                        switch (offer.status) {
+                            case 'acceptee': statusText = 'Acceptée'; break;
+                            case 'excessive': statusText = 'Excessive (écartée)'; break;
+                            case 'anormalement_basse': statusText = 'Anormalement basse (écartée)'; break;
+                        }
+                        
+                        let observation = '';
+                        if (bestOffer && bestOffer.id === offer.id) {
+                            observation = 'OFFRE RETENUE - Meilleure offre';
+                        } else if (offer.status === 'excessive') {
+                            observation = 'ÉCARTÉE - Montant supérieur au seuil';
+                        } else if (offer.status === 'anormalement_basse') {
+                            observation = 'ÉCARTÉE - Montant inférieur au seuil';
+                        } else {
+                            observation = 'Offre valide';
+                        }
+                        
+                        offersData.push([
+                            index + 1,
+                            offer.company,
+                            offer.amount,
+                            offer.technicalScore || '-',
+                            statusText,
+                            offer.diffPercent.toFixed(2) + '%',
+                            observation,
+                            seuilBas.toLocaleString('fr-MA'),
+                            seuilHaut.toLocaleString('fr-MA')
+                        ]);
+                    });
+                    
+                    const ws2 = XLSX.utils.aoa_to_sheet(offersData);
+                    XLSX.utils.book_append_sheet(wb, ws2, 'Détail offres');
+                    
+                    // Feuille 3: Calculs intermédiaires
+                    const calcData = [
+                        ['CALCULS INTERMÉDIAIRES'],
+                        [''],
+                        ['Étape', 'Description', 'Valeur', 'Formule', 'Résultat']
+                    ];
+                    
+                    if (referencePrice) {
+                        calcData.push(
+                            ['1', 'Détermination des offres valides', processedOffers.filter(o => o.status === 'acceptee').length + ' offres', 'Offres dans les seuils', ''],
+                            ['2', 'Vérification condition travaux', state.marketType === 'travaux' && state.offers.every(o => o.amount > estimation) ? 'VRAI' : 'FAUX', 'Toutes offres > E ?', state.marketType === 'travaux' && state.offers.every(o => o.amount > estimation) ? 'P = E × 0.85' : 'P = moyenne'],
+                            ['3', 'Calcul du prix de référence', referencePrice.value.toLocaleString('fr-MA') + ' DH', referencePrice.formula, '']
+                        );
+                    }
+                    
+                    if (bestOffer && state.technicalScoring) {
+                        calcData.push(
+                            ['4', 'Notation technique', bestOffer.techScore + '/100', 'Note technique', ''],
+                            ['5', 'Notation prix', bestOffer.priceScore.toFixed(2) + '/100', '(Prix max - Prix offre) / Prix max × 100', ''],
+                            ['6', 'Score final', bestOffer.finalScore.toFixed(2) + '/100', `(${state.technicalWeight}% tech + ${100-state.technicalWeight}% prix)`, '']
+                        );
+                    }
+                    
+                    const ws3 = XLSX.utils.aoa_to_sheet(calcData);
+                    XLSX.utils.book_append_sheet(wb, ws3, 'Calculs');
+                    
+                    // Génération du fichier
+                    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    saveAs(blob, `rapport-complet-prix-reference-${Date.now()}.xlsx`);
+                    
+                    hideLoading();
+                    showSuccess('Rapport complet Excel généré avec succès !');
+                } catch (error) {
+                    hideLoading();
+                    showError('Erreur lors de la génération du rapport Excel: ' + error.message);
+                }
+            }, 2000);
+        }
+        
+        function exportAsCSV() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune donnée à exporter');
+                return;
+            }
+            
+            showLoading('Export en CSV...');
+            
+            setTimeout(() => {
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Rapport Prix de Référence\r\n";
+                csvContent += `Date,"${new Date().toLocaleDateString('fr-MA')}"\r\n`;
+                csvContent += `Nom du calcul,"${state.calculationName}"\r\n`;
+                csvContent += `Type de marché,"${state.marketType}"\r\n`;
+                csvContent += `Estimation (E),${parseFloat(state.estimation)}\r\n`;
+                csvContent += `Prix de référence (P),${referencePrice ? referencePrice.value : ''}\r\n`;
+                csvContent += "\r\n";
+                csvContent += "N°,Concurrent,Montant (DH),Note Technique,Statut,Écart %,Observations\r\n";
+                
+                processedOffers.forEach((offer, index) => {
+                    let statusText = '';
+                    switch (offer.status) {
+                        case 'acceptee': statusText = 'Acceptée'; break;
+                        case 'excessive': statusText = 'Excessive'; break;
+                        case 'anormalement_basse': statusText = 'Anormalement basse'; break;
+                    }
+                    
+                    let observation = '';
+                    if (bestOffer && bestOffer.id === offer.id) {
+                        observation = 'Offre retenue (meilleure offre)';
+                    } else if (offer.status === 'excessive') {
+                        observation = 'Écartée - montant excessif';
+                    } else if (offer.status === 'anormalement_basse') {
+                        observation = 'Écartée - montant anormalement bas';
+                    } else {
+                        observation = 'Offre valide';
+                    }
+                    
+                    csvContent += `${index + 1},"${offer.company}",${offer.amount},${offer.technicalScore || ''},"${statusText}",${offer.diffPercent},"${observation}"\r\n`;
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `rapport-prix-reference-${Date.now()}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                hideLoading();
+                showSuccess('Fichier CSV généré avec succès !');
+            }, 500);
+        }
+        
+        // ============================================================================
+        // GÉNÉRATION PDF
+        // ============================================================================
+        
+        function generateFullPDF() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune donnée à exporter');
+                return;
+            }
+            
+            showLoading('Génération du rapport PDF...');
+            
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+                    
+                    // Configuration
+                    const pageWidth = doc.internal.pageSize.width;
+                    const margin = 15;
+                    const contentWidth = pageWidth - 2 * margin;
+                    
+                    let yPos = margin;
+                    
+                    // En-tête
+                    doc.setFontSize(16);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('RAPPORT DE CALCUL DU PRIX DE RÉFÉRENCE', pageWidth / 2, yPos, { align: 'center' });
+                    yPos += 8;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text('Conforme au Décret n° 2-22-431 du 8 mars 2023', pageWidth / 2, yPos, { align: 'center' });
+                    yPos += 15;
+                    
+                    // Informations générales
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('INFORMATIONS GÉNÉRALES', margin, yPos);
+                    yPos += 7;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    const generalInfo = [
+                        `Date du calcul: ${new Date().toLocaleDateString('fr-MA')} ${new Date().toLocaleTimeString('fr-MA', {hour: '2-digit', minute:'2-digit'})}`,
+                        `Nom du calcul: ${state.calculationName}`,
+                        `Type de marché: ${state.marketType}`,
+                        `Estimation initiale (E): ${parseFloat(state.estimation).toLocaleString('fr-MA')} DH`,
+                        `Mode de calcul: ${state.taxIncluded ? 'TTC' : 'HT'}`,
+                        `Notation technique: ${state.technicalScoring ? 'Activée' : 'Désactivée'}`
+                    ];
+                    
+                    if (state.technicalScoring) {
+                        generalInfo.push(`Poids technique: ${state.technicalWeight}%`);
+                    }
+                    
+                    generalInfo.forEach(info => {
+                        doc.text(info, margin, yPos);
+                        yPos += 5;
+                    });
+                    
+                    yPos += 5;
+                    
+                    // Paramètres appliqués
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('PARAMÈTRES APPLIQUÉS (Article 44)', margin, yPos);
+                    yPos += 7;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(`Seuil excessive: +${state.thresholds[state.marketType].excessiveUpperBound * 100}%`, margin, yPos);
+                    yPos += 5;
+                    doc.text(`Seuil anormalement basse: -${state.thresholds[state.marketType].abnormalLowerBound * 100}%`, margin, yPos);
+                    yPos += 10;
+                    
+                    // Résultats principaux
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('RÉSULTATS PRINCIPAUX', margin, yPos);
+                    yPos += 7;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    
+                    if (referencePrice) {
+                        doc.text(`Prix de référence calculé (P): ${referencePrice.value.toLocaleString('fr-MA')} DH`, margin, yPos);
+                        yPos += 5;
+                        doc.text(`Formule: ${referencePrice.formula}`, margin, yPos);
+                        yPos += 5;
+                    }
+                    
+                    if (bestOffer) {
+                        doc.text(`Meilleure offre retenue: ${bestOffer.company}`, margin, yPos);
+                        yPos += 5;
+                        doc.text(`Montant: ${bestOffer.amount.toLocaleString('fr-MA')} DH`, margin, yPos);
+                        yPos += 5;
+                        
+                        if (referencePrice) {
+                            const diffPercent = ((bestOffer.amount - referencePrice.value) / referencePrice.value * 100);
+                            doc.text(`Écart avec P: ${diffPercent.toFixed(2)}%`, margin, yPos);
+                            yPos += 5;
+                        }
+                    }
+                    
+                    yPos += 10;
+                    
+                    // Vérifier si on a besoin d'une nouvelle page
+                    if (yPos > 250) {
+                        doc.addPage();
+                        yPos = margin;
+                    }
+                    
+                    // Tableau des offres
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('DÉTAIL DES OFFRES REÇUES', margin, yPos);
+                    yPos += 7;
+                    
+                    // Préparation des données du tableau
+                    const tableData = [];
+                    const headers = ['N°', 'Concurrent', 'Montant (DH)', 'Note', 'Statut', 'Écart %'];
+                    
+                    processedOffers.forEach((offer, index) => {
+                        let statusText = '';
+                        switch (offer.status) {
+                            case 'acceptee': statusText = 'Acceptée'; break;
+                            case 'excessive': statusText = 'Excessive'; break;
+                            case 'anormalement_basse': statusText = 'Anormalement basse'; break;
+                        }
+                        
+                        tableData.push([
+                            (index + 1).toString(),
+                            offer.company,
+                            offer.amount.toLocaleString('fr-MA'),
+                            offer.technicalScore || '-',
+                            statusText,
+                            (offer.diffPercent > 0 ? '+' : '') + offer.diffPercent.toFixed(2) + '%'
+                        ]);
+                    });
+                    
+                    // Génération du tableau avec autoTable
+                    doc.autoTable({
+                        startY: yPos,
+                        head: [headers],
+                        body: tableData,
+                        margin: { left: margin, right: margin },
+                        styles: { fontSize: 8, cellPadding: 2 },
+                        headStyles: { fillColor: [0, 98, 51] }, // Vert Maroc
+                        alternateRowStyles: { fillColor: [240, 240, 240] },
+                        didDrawPage: function(data) {
+                            yPos = data.cursor.y + 10;
+                        }
+                    });
+                    
+                    yPos = doc.lastAutoTable.finalY + 10;
+                    
+                    // Vérifier si on a besoin d'une nouvelle page
+                    if (yPos > 250) {
+                        doc.addPage();
+                        yPos = margin;
+                    }
+                    
+                    // Statistiques
+                    const validOffers = processedOffers.filter(o => o.status === 'acceptee');
+                    const excludedOffers = processedOffers.filter(o => o.status !== 'acceptee');
+                    const averageAmount = validOffers.length > 0 
+                        ? validOffers.reduce((sum, o) => sum + o.amount, 0) / validOffers.length 
+                        : 0;
+                    
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('STATISTIQUES', margin, yPos);
+                    yPos += 7;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    
+                    const stats = [
+                        `Total des offres reçues: ${state.offers.length}`,
+                        `Offres acceptées: ${validOffers.length}`,
+                        `Offres excessives: ${excludedOffers.filter(o => o.status === 'excessive').length}`,
+                        `Offres anormalement basses: ${excludedOffers.filter(o => o.status === 'anormalement_basse').length}`,
+                        `Taux d'écartement: ${((excludedOffers.length / processedOffers.length) * 100).toFixed(1)}%`,
+                        `Montant moyen des offres valides: ${averageAmount.toLocaleString('fr-MA')} DH`
+                    ];
+                    
+                    stats.forEach(stat => {
+                        doc.text(stat, margin, yPos);
+                        yPos += 5;
+                    });
+                    
+                    yPos += 10;
+                    
+                    // Références légales
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('RÉFÉRENCES LÉGALES', margin, yPos);
+                    yPos += 7;
+                    
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text('Décret n° 2-22-431 du 8 mars 2023 relatif aux marchés publics', margin, yPos);
+                    yPos += 4;
+                    doc.text('Article 43: Détermination du prix de référence', margin, yPos);
+                    yPos += 4;
+                    doc.text('Article 44: Seuils d\'écartement des offres', margin, yPos);
+                    yPos += 10;
+                    
+                    // Pied de page
+                    doc.setFontSize(8);
+                    doc.text('Document généré automatiquement - Royaume du Maroc - Ministère de l\'Économie et des Finances', pageWidth / 2, 290, { align: 'center' });
+                    
+                    // Sauvegarde du PDF
+                    doc.save(`rapport-prix-reference-${Date.now()}.pdf`);
+                    
+                    hideLoading();
+                    showSuccess('Rapport PDF généré avec succès !');
+                } catch (error) {
+                    hideLoading();
+                    showError('Erreur lors de la génération du PDF: ' + error.message);
+                }
+            }, 2000);
+        }
+        
+        function generateTablePDF() {
+            if (state.offers.length === 0) {
+                showWarning('Aucune donnée à exporter');
+                return;
+            }
+            
+            showLoading('Génération du tableau PDF...');
+            
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({
+                        orientation: 'landscape',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+                    
+                    const margin = 10;
+                    let yPos = margin;
+                    
+                    // Titre
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('TABLEAU DES OFFRES - CALCUL DU PRIX DE RÉFÉRENCE', 148.5 / 2, yPos, { align: 'center' });
+                    yPos += 8;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(`Date: ${new Date().toLocaleDateString('fr-MA')} | Calcul: ${state.calculationName} | Type: ${state.marketType}`, 148.5 / 2, yPos, { align: 'center' });
+                    yPos += 15;
+                    
+                    // En-tête du tableau
+                    const headers = ['N°', 'Concurrent', 'Montant (DH)', 'Note Technique', 'Statut', 'Écart %', 'Observations'];
+                    
+                    // Données du tableau
+                    const tableData = processedOffers.map((offer, index) => {
+                        let statusText = '';
+                        switch (offer.status) {
+                            case 'acceptee': statusText = 'Acceptée'; break;
+                            case 'excessive': statusText = 'Excessive'; break;
+                            case 'anormalement_basse': statusText = 'Anormalement basse'; break;
+                        }
+                        
+                        let observation = '';
+                        if (bestOffer && bestOffer.id === offer.id) {
+                            observation = '⭐ OFFRE RETENUE (Meilleure offre)';
+                        } else if (offer.status === 'excessive') {
+                            observation = 'ÉCARTÉE - Montant excessif';
+                        } else if (offer.status === 'anormalement_basse') {
+                            observation = 'ÉCARTÉE - Montant anormalement bas';
+                        } else {
+                            observation = 'Offre valide';
+                        }
+                        
+                        return [
+                            (index + 1).toString(),
+                            offer.company,
+                            offer.amount.toLocaleString('fr-MA'),
+                            offer.technicalScore || '-',
+                            statusText,
+                            (offer.diffPercent > 0 ? '+' : '') + offer.diffPercent.toFixed(2) + '%',
+                            observation
+                        ];
+                    });
+                    
+                    // Ajouter des lignes de résumé
+                    tableData.push(['', '', '', '', '', '', '']);
+                    tableData.push(['', 'ESTIMATION (E):', parseFloat(state.estimation).toLocaleString('fr-MA') + ' DH', '', '', '', '']);
+                    
+                    if (referencePrice) {
+                        tableData.push(['', 'PRIX DE RÉFÉRENCE (P):', referencePrice.value.toLocaleString('fr-MA') + ' DH', '', '', '', '']);
+                    }
+                    
+                    if (bestOffer) {
+                        tableData.push(['', 'MEILLEURE OFFRE:', bestOffer.company, '', '', '', '']);
+                        tableData.push(['', 'MONTANT:', bestOffer.amount.toLocaleString('fr-MA') + ' DH', '', '', '', '']);
+                    }
+                    
+                    // Génération du tableau
+                    doc.autoTable({
+                        startY: yPos,
+                        head: [headers],
+                        body: tableData,
+                        margin: { left: margin, right: margin },
+                        styles: { fontSize: 8, cellPadding: 3 },
+                        headStyles: { fillColor: [0, 98, 51], textColor: [255, 255, 255] },
+                        bodyStyles: { textColor: [0, 0, 0] },
+                        alternateRowStyles: { fillColor: [245, 245, 245] },
+                        columnStyles: {
+                            0: { cellWidth: 10 },
+                            1: { cellWidth: 30 },
+                            2: { cellWidth: 25 },
+                            3: { cellWidth: 20 },
+                            4: { cellWidth: 20 },
+                            5: { cellWidth: 15 },
+                            6: { cellWidth: 40 }
+                        },
+                        didParseCell: function(data) {
+                            // Mise en forme spéciale pour la meilleure offre
+                            if (data.row.index < processedOffers.length) {
+                                const offer = processedOffers[data.row.index];
+                                if (bestOffer && bestOffer.id === offer.id) {
+                                    data.cell.styles.fillColor = [255, 255, 200]; // Jaune clair
+                                }
+                                if (offer.status === 'excessive') {
+                                    data.cell.styles.textColor = [255, 100, 0]; // Orange
+                                } else if (offer.status === 'anormalement_basse') {
+                                    data.cell.styles.textColor = [255, 0, 0]; // Rouge
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Pied de page
+                    doc.setFontSize(8);
+                    doc.text('Document conforme au Décret n° 2-22-431 du 8 mars 2023 - Royaume du Maroc', 148.5 / 2, 200, { align: 'center' });
+                    
+                    // Sauvegarde
+                    doc.save(`tableau-offres-${Date.now()}.pdf`);
+                    
+                    hideLoading();
+                    showSuccess('Tableau PDF généré avec succès !');
+                } catch (error) {
+                    hideLoading();
+                    showError('Erreur lors de la génération du PDF: ' + error.message);
+                }
+            }, 1500);
+        }
+        
+        // ============================================================================
+        // GESTION DES ONGLETS
+        // ============================================================================
+        
+        function switchTab(tabName) {
+            // Masquer tous les onglets
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Désactiver tous les boutons d'onglets
+            document.querySelectorAll('#mainTabs .nav-link').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Afficher l'onglet sélectionné
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+            
+            // Activer le bouton correspondant
+            document.querySelector(`#mainTabs .nav-link[onclick*="${tabName}"]`).classList.add('active');
+            
+            // Mettre à jour l'aperçu du rapport si on est dans l'onglet rapport
+            if (tabName === 'rapport') {
+                updateReportPreview();
+            }
+            
+            // Mettre à jour le tableau d'export si on est dans l'onglet export
+            if (tabName === 'export') {
+                updateExportTable();
+            }
+        }
+        
+        // ============================================================================
+        // FONCTIONS UTILITAIRES
+        // ============================================================================
+        
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            document.body.classList.toggle('dark-mode', state.darkMode);
+            
+            const icon = document.getElementById('darkModeIcon');
+            icon.className = state.darkMode ? 'bi bi-sun' : 'bi bi-moon';
+            
+            if (state.showNotifications) {
+                showInfo(`Mode ${state.darkMode ? 'sombre' : 'clair'} activé`);
+            }
+            
+            saveToLocalStorage();
+        }
+        
+        function toggleAdvancedSettings() {
+            const settings = document.getElementById('advancedSettings');
+            const button = event.target.closest('button');
+            
+            if (settings.style.display === 'none') {
+                settings.style.display = 'block';
+                button.innerHTML = '<i class="bi bi-sliders"></i>';
+            } else {
+                settings.style.display = 'none';
+                button.innerHTML = '<i class="bi bi-sliders"></i>';
+            }
+        }
+        
+        function toggleTechnicalScoring() {
+            state.technicalScoring = document.getElementById('technicalScoring').checked;
+            updateUI();
+        }
+        
+        function toggleStatistics() {
+            const stats = document.getElementById('statisticsSection');
+            const button = event.target.closest('button');
+            
+            if (stats.style.display === 'none') {
+                stats.style.display = 'block';
+                button.innerHTML = '<i class="bi bi-graph-down"></i>';
+            } else {
+                stats.style.display = 'none';
+                button.innerHTML = '<i class="bi bi-graph-up"></i>';
+            }
+        }
+        
+        function updateThreshold(type, field, value) {
+            if (field === 'excessive') {
+                state.thresholds[type].excessiveUpperBound = parseFloat(value) / 100;
+            } else if (field === 'abnormal') {
+                state.thresholds[type].abnormalLowerBound = parseFloat(value) / 100;
+            }
+            
+            // Si c'est le type de marché actuel, mettre à jour l'affichage
+            if (type === state.marketType) {
+                updateThresholdDisplay();
+                updateCalculation();
+            }
+            
+            saveToLocalStorage();
+        }
+        
+        function resetThresholds() {
+            const defaults = {
+                travaux: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.20 },
+                fournitures: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 },
+                services: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 },
+                etudes: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 }
+            };
+            
+            state.thresholds[state.marketType] = { ...defaults[state.marketType] };
+            updateThresholdDisplay();
+            updateCalculation();
+            
+            showSuccess('Seuils réinitialisés aux valeurs par défaut');
+        }
+        
+        function resetAllThresholds() {
+            state.thresholds = {
+                travaux: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.20 },
+                fournitures: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 },
+                services: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 },
+                etudes: { excessiveUpperBound: 0.20, abnormalLowerBound: 0.25 }
+            };
+            
+            updateUI();
+            showSuccess('Tous les seuils ont été réinitialisés');
+        }
+        
+        function uniformizeThresholds() {
+            for (const type in state.thresholds) {
+                state.thresholds[type] = {
+                    excessiveUpperBound: 0.20,
+                    abnormalLowerBound: 0.20
+                };
+            }
+            
+            updateUI();
+            showSuccess('Tous les seuils ont été uniformisés à 20%');
+        }
+        
+        function showResetConfirmation() {
+            Swal.fire({
+                title: 'Tout réinitialiser ?',
+                text: "Toutes les données du calcul actuel seront effacées. Cette action est irréversible.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, tout réinitialiser',
+                cancelButtonText: 'Annuler',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    resetAll();
+                }
+            });
+        }
+        
+        function resetAll() {
+            state.marketType = 'travaux';
+            state.estimation = '';
+            state.taxIncluded = false;
+            state.offers = [];
+            state.technicalScoring = false;
+            state.technicalWeight = 60;
+            state.calculationName = 'Nouveau calcul';
+            
+            updateUI();
+            showSuccess('Toutes les données ont été réinitialisées');
+        }
+        
+        function loadExample() {
+            Swal.fire({
+                title: 'Charger un exemple ?',
+                text: "Les données actuelles seront remplacées par un exemple de calcul.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, charger',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    state.estimation = "5000000";
+                    state.offers = [
+                        { id: 1, company: "Entreprise A", amount: 4500000, technicalScore: 85 },
+                        { id: 2, company: "Entreprise B", amount: 5200000, technicalScore: 78 },
+                        { id: 3, company: "Entreprise C", amount: 6200000, technicalScore: 92 },
+                        { id: 4, company: "Entreprise D", amount: 4800000, technicalScore: 65 },
+                        { id: 5, company: "Entreprise E", amount: 7000000, technicalScore: 88 }
+                    ];
+                    
+                    updateCalculation();
+                    showSuccess('Exemple chargé avec succès !');
+                }
+            });
+        }
+        
+        function showImportModal() {
+            const modal = new bootstrap.Modal(document.getElementById('importModal'));
+            modal.show();
+        }
+        
+        function showReferencePriceDetails() {
+            if (!referencePrice) {
+                showWarning('Aucun prix de référence calculé');
+                return;
+            }
+            
+            Swal.fire({
+                title: 'Détails du Prix de Référence',
+                html: `
+                    <div class="text-start">
+                        <p><strong>Valeur:</strong> ${referencePrice.value.toLocaleString('fr-MA')} DH</p>
+                        <p><strong>Formule de calcul:</strong> ${referencePrice.formula}</p>
+                        <p><strong>Méthode:</strong> ${referencePrice.method === 'travaux_toutes_offres_superieures' ? 'Travaux (toutes offres > E)' : 'Moyenne des offres valides'}</p>
+                        <hr>
+                        <p class="small text-muted">Le prix de référence (P) est déterminé selon l'article 43 du Décret n° 2-22-431.</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Compris'
+            });
+        }
+        
+        function showBestOfferDetails() {
+            if (!bestOffer) {
+                showWarning('Aucune meilleure offre sélectionnée');
+                return;
+            }
+            
+            let details = `
+                <div class="text-start">
+                    <p><strong>Entreprise:</strong> ${bestOffer.company}</p>
+                    <p><strong>Montant:</strong> ${bestOffer.amount.toLocaleString('fr-MA')} DH</p>
+            `;
+            
+            if (state.technicalScoring) {
+                details += `
+                    <p><strong>Note technique:</strong> ${bestOffer.techScore || 0}/100</p>
+                    <p><strong>Note prix:</strong> ${bestOffer.priceScore ? bestOffer.priceScore.toFixed(2) : 'N/A'}/100</p>
+                    <p><strong>Score final:</strong> ${bestOffer.finalScore ? bestOffer.finalScore.toFixed(2) : 'N/A'}/100</p>
+                `;
+            }
+            
+            if (referencePrice) {
+                const diffPercent = ((bestOffer.amount - referencePrice.value) / referencePrice.value * 100);
+                details += `<p><strong>Écart avec P:</strong> ${diffPercent.toFixed(2)}%</p>`;
+            }
+            
+            details += `
+                    <p><strong>Méthode de sélection:</strong> ${bestOffer.selectionMethod === 'notation_combinée' ? 'Notation combinée (technique + prix)' : bestOffer.selectionMethod === 'plus_proche_en_dessous' ? 'Plus proche en dessous de P' : 'Plus proche (par excès)'}</p>
+                    <hr>
+                    <p class="small text-muted">L'offre retenue est celle qui présente le meilleur rapport qualité-prix selon les critères définis.</p>
+                </div>
+            `;
+            
+            Swal.fire({
+                title: 'Détails de la Meilleure Offre',
+                html: details,
+                icon: 'success',
+                confirmButtonText: 'Compris'
+            });
+        }
+        
+        function printReport() {
+            if (state.offers.length === 0) {
+                showWarning('Aucun rapport à imprimer');
+                return;
+            }
+            
+            const printWindow = window.open('', '_blank');
+            const reportContent = document.getElementById('reportPreview').textContent;
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Rapport - Calcul Prix de Référence : HAFFAR ABDELFETTAH</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        h1 { color: #006233; border-bottom: 2px solid #006233; padding-bottom: 10px; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .info { margin: 20px 0; }
+                        .section { margin: 25px 0; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #006233; color: white; }
+                        tr:nth-child(even) { background-color: #f2f2f2; }
+                        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 0.9em; color: #666; }
+                        @media print {
+                            body { margin: 0; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>RAPPORT DE CALCUL DU PRIX DE RÉFÉRENCE</h1>
+                        <p>Conforme au Décret n° 2-22-431 du 8 mars 2023</p>
+                    </div>
+                    
+                    <div class="info">
+                        <p><strong>Date:</strong> ${new Date().toLocaleDateString('fr-MA')} ${new Date().toLocaleTimeString('fr-MA', {hour: '2-digit', minute:'2-digit'})}</p>
+                        <p><strong>Nom du calcul:</strong> ${state.calculationName}</p>
+                        <p><strong>Type de marché:</strong> ${state.marketType}</p>
+                        <p><strong>Estimation (E):</strong> ${parseFloat(state.estimation).toLocaleString('fr-MA')} DH</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>Résumé des Résultats</h2>
+                        <p><strong>Prix de Référence (P):</strong> ${referencePrice ? referencePrice.value.toLocaleString('fr-MA') + ' DH' : 'Non calculable'}</p>
+                        <p><strong>Meilleure offre:</strong> ${bestOffer ? bestOffer.company + ' - ' + bestOffer.amount.toLocaleString('fr-MA') + ' DH' : 'Aucune'}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>Détail des Offres</h2>
+                        <table>
+                            <tr>
+                                <th>N°</th>
+                                <th>Concurrent</th>
+                                <th>Montant (DH)</th>
+                                <th>Note Tech.</th>
+                                <th>Statut</th>
+                                <th>Écart %</th>
+                            </tr>
+            `);
+            
+            processedOffers.forEach((offer, index) => {
+                let statusText = '';
+                switch (offer.status) {
+                    case 'acceptee': statusText = 'Acceptée'; break;
+                    case 'excessive': statusText = 'Excessive'; break;
+                    case 'anormalement_basse': statusText = 'Anormalement basse'; break;
+                }
+                
+                printWindow.document.write(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${offer.company}</td>
+                        <td>${offer.amount.toLocaleString('fr-MA')}</td>
+                        <td>${offer.technicalScore || '-'}</td>
+                        <td>${statusText}</td>
+                        <td>${offer.diffPercent > 0 ? '+' : ''}${offer.diffPercent.toFixed(2)}%</td>
+                    </tr>
+                `);
+            });
+            
+            printWindow.document.write(`
+                        </table>
+                    </div>
+                    
+                    <div class="footer">
+                        <p>Document généré automatiquement par l'application de calcul du prix de référence</p>
+                        <p>Royaume du Maroc - Ministère de l'Économie et des Finances / HAFFAR ABDELFETTAH</p>
+                        <p>Décret n° 2-22-431 du 8 mars 2023 - Articles 43 & 44</p>
+                    </div>
+                    
+                    <div class="no-print" style="margin-top: 30px; text-align: center;">
+                        <button onclick="window.print()" style="padding: 10px 20px; background-color: #006233; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Imprimer le rapport
+                        </button>
+                    </div>
+                    
+                    
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+        }
+        
+        function showLegalInfo() {
+            Swal.fire({
+                title: 'Références Légales',
+                html: `
+                    <div class="text-start">
+                        <h5>Décret n° 2-22-431 du 8 mars 2023</h5>
+                        <p>Relatif aux marchés publics et portant fixation des seuils et des règles de procédure de passation.</p>
+                        
+                        <h6 class="mt-3">Article 43 - Prix de référence</h6>
+                        <p>Le prix de référence est déterminé comme suit :</p>
+                        <ul>
+                            <li>Pour les marchés de travaux : moyenne des offres valables</li>
+                            <li>Si toutes les offres sont supérieures à l'estimation : 85% de l'estimation</li>
+                            <li>Pour les autres marchés : moyenne des offres régulières</li>
+                        </ul>
+                        
+                        <h6 class="mt-3">Article 44 - Seuils d'écartement</h6>
+                        <p>Les offres sont écartées si :</p>
+                        <ul>
+                            <li>Elles dépassent l'estimation de plus de 20% (excessive)</li>
+                            <li>Elles sont inférieures à l'estimation de plus de 20% (travaux) ou 25% (autres)</li>
+                        </ul>
+                        
+                        <hr>
+                        <p class="small text-muted">Source : Bulletin Officiel n° 7090 du 6 avril 2023</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Compris',
+                width: '600px'
+            });
+        }
+        
+        function showHelp() {
+            Swal.fire({
+                title: 'Aide & Documentation',
+                html: `
+                    <div class="text-start">
+                        <h5>Guide d'utilisation</h5>
+                        <ol>
+                            <li><strong>Saisie des données :</strong> Entrez l'estimation du marché et ajoutez les offres reçues</li>
+                            <li><strong>Paramétrage :</strong> Ajustez les seuils selon le type de marché</li>
+                            <li><strong>Calcul :</strong> L'application calcule automatiquement le prix de référence</li>
+                            <li><strong>Export :</strong> Générez des rapports en différents formats</li>
+                        </ol>
+                        
+                        <h5 class="mt-4">Fonctionnalités principales</h5>
+                        <ul>
+                            <li>Calcul automatique selon le décret marocain</li>
+                            <li>Gestion des seuils personnalisables</li>
+                            <li>Notation technique optionnelle</li>
+                            <li>Sauvegarde automatique</li>
+                            <li>Export multiple (PDF, Excel, JSON, CSV)</li>
+                            <li>Historique des calculs</li>
+                        </ul>
+                        
+                        <h5 class="mt-4">Conseils</h5>
+                        <ul>
+                            <li>Sauvegardez régulièrement vos calculs</li>
+                            <li>Utilisez l'export PDF pour des rapports officiels</li>
+                            <li>Vérifiez les seuils selon le type de marché</li>
+                            <li>Consultez les références légales si besoin</li>
+                        </ul>
+                    </div>
+                `,
+                icon: 'question',
+                confirmButtonText: 'Compris',
+                width: '700px'
+            });
+        }
+        
+        function showAbout() {
+            Swal.fire({
+                title: 'À propos',
+                html: `
+                    <div class="text-center">
+                        <h4 class="text-maroc-green">Application de Calcul du Prix de Référence</h4>
+                        <p>Version 2.0</p>
+                        
+                        <div class="mt-4">
+                            <p><strong>Conforme au Décret n° 2-22-431 du 8 mars 2023</strong></p>
+                            <p>Royaume du Maroc - Marchés Publics</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <p>Développé pour simplifier le calcul du prix de référence selon la réglementation marocaine des marchés publics.</p>
+                            <p class="small text-muted">Articles 43 & 44 - Évaluation financière des offres</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <p>© 2026 - Tous droits réservés (HAFFAR ABDELFETTAH)</p>
+                        </div>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Fermer'
+            });
+        }
+        
+        // ============================================================================
+        // FONCTIONS D'AFFICHAGE DES MESSAGES
+        // ============================================================================
+        
+        function showSuccess(message) {
+            if (!state.showNotifications) return;
+            
+            Swal.fire({
+                title: 'Succès !',
+                text: message,
+                icon: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+        
+        function showError(message) {
+            Swal.fire({
+                title: 'Erreur !',
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+        
+        function showWarning(message) {
+            Swal.fire({
+                title: 'Attention',
+                text: message,
+                icon: 'warning',
+                confirmButtonText: 'Compris'
+            });
+        }
+        
+        function showInfo(message) {
+            if (!state.showNotifications) return;
+            
+            Swal.fire({
+                title: 'Information',
+                text: message,
+                icon: 'info',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+        
+        function showLoading(message = 'Chargement...') {
+            document.getElementById('loadingText').textContent = message;
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+        
+        // ============================================================================
+        // INITIALISATION
+        // ============================================================================
+        
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // Exposer les fonctions globalement pour les événements onclick
+        window.addOffer = addOffer;
+        window.removeOffer = removeOffer;
+        window.duplicateOffer = duplicateOffer;
+        window.editOffer = editOffer;
+        window.saveCurrentCalculation = saveCurrentCalculation;
+        window.loadCalculation = loadCalculation;
+        window.deleteCalculation = deleteCalculation;
+        window.clearHistory = clearHistory;
+        window.exportCalculation = exportCalculation;
+        window.importCalculation = importCalculation;
+        window.generateReport = generateReport;
+        window.generateExcelReport = generateExcelReport;
+        window.exportTableToExcel = exportTableToExcel;
+        window.exportFullDataToExcel = exportFullDataToExcel;
+        window.generateFullPDF = generateFullPDF;
+        window.generateTablePDF = generateTablePDF;
+        window.exportAsCSV = exportAsCSV;
+        window.switchTab = switchTab;
+        window.toggleDarkMode = toggleDarkMode;
+        window.toggleAdvancedSettings = toggleAdvancedSettings;
+        window.toggleTechnicalScoring = toggleTechnicalScoring;
+        window.toggleStatistics = toggleStatistics;
+        window.updateThreshold = updateThreshold;
+        window.resetThresholds = resetThresholds;
+        window.resetAllThresholds = resetAllThresholds;
+        window.uniformizeThresholds = uniformizeThresholds;
+        window.showResetConfirmation = showResetConfirmation;
+        window.resetAll = resetAll;
+        window.loadExample = loadExample;
+        window.showImportModal = showImportModal;
+        window.updateCalculation = updateCalculation;
+        window.showReferencePriceDetails = showReferencePriceDetails;
+        window.showBestOfferDetails = showBestOfferDetails;
+        window.printReport = printReport;
+        window.showLegalInfo = showLegalInfo;
+        window.showHelp = showHelp;
+        window.showAbout = showAbout;
+    </script>
+</body>
+</html>
